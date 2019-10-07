@@ -5,10 +5,79 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:nodenetwork="clr-namespace:NodeNetwork.Views;assembly=NodeNetwork"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    mc:Ignorable="d" 
+    x:Name="entryControl"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-           
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+
+            <TabItem Header="Dialogue Graph" Background="{DynamicResource RodskaTabBackground}">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Background="{DynamicResource RodskaTabBackground}" Foreground="White" Text="{Binding}">
+
+                        </TextBlock>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <nodenetwork:NetworkView x:Name="conversationWorkspace"></nodenetwork:NetworkView>
+            </TabItem>
+            <TabItem Header="Compiled Dialogue" Background="#FF55AA7F">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Background="{DynamicResource RodskaTabBackground}" Foreground="White" Text="{Binding}">
+
+                        </TextBlock>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <TabControl>
+                    <TabItem Header="Lua"  Foreground="White" BorderBrush="#CCFFFFFF" Background="#FF55AA7F">
+                        <TabItem.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Background="{DynamicResource RodskaTabBackground}" Foreground="White" Text="{Binding}">
+
+                                </TextBlock>
+                            </DataTemplate>
+                        </TabItem.HeaderTemplate>
+                        <avalonedit:TextEditor
+                             x:Name="compilationLua"
+                             FontFamily="Consolas"
+                             FontSize="18pt"
+                             SyntaxHighlighting="Lua"
+                             IsReadOnly="True"
+                            >
+
+                        </avalonedit:TextEditor>
+                    </TabItem>
+                    <TabItem Header="JSON" Background="#FF55AA7F">
+                        <TabItem.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Background="{DynamicResource RodskaTabBackground}" Foreground="White" Text="{Binding}">
+
+                                </TextBlock>
+                            </DataTemplate>
+                        </TabItem.HeaderTemplate>
+                    </TabItem>
+                    <TabItem Header="Director Script" Background="#FF55AA7F">
+                        <TabItem.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Background="{DynamicResource RodskaTabBackground}" Foreground="White" Text="{Binding}">
+
+                                </TextBlock>
+                            </DataTemplate>
+                        </TabItem.HeaderTemplate>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
+        <catel:ToolBar  Name="DocumentControls" Grid.Row="2" Background="{DynamicResource RodskaYellowButton}">
+            <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click" Background="{DynamicResource RodskaYellowButton}"/>
+        </catel:ToolBar>
     </Grid>
 </catel:UserControl>

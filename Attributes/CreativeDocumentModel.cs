@@ -86,7 +86,6 @@ namespace RodskaNote.Attributes
             {
                 objects.Add(type);
             }
-            objects.Sort();
             return objects;
         }
 
@@ -101,17 +100,19 @@ namespace RodskaNote.Attributes
             foreach(Type type in documentTypes)
             {
                 CreativeDocumentModel cdm = (CreativeDocumentModel) GetCustomAttribute(type, typeof(CreativeDocumentModel));
-                var method = type.GetMethod("CreateAsync", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-                Console.WriteLine(method.ToString());
-                if (method != null)
+                if (cdm != null)
                 {
-                    cdm.CreationCommand = async (IUIVisualizerService vs, MasterViewModel viewModel) =>
+                    var method = type.GetMethod("CreateAsync", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                    if (method != null)
                     {
-                        await Task.Run(() => method.Invoke(null, new object[] { vs, viewModel }));
-                    };
+                        cdm.CreationCommand = async (IUIVisualizerService vs, MasterViewModel viewModel) =>
+                        {
+                            await Task.Run(() => method.Invoke(null, new object[] { vs, viewModel }));
+                        };
+                    }
+                    cdm.objectType = type;
+                    docAttrs.Add(cdm);
                 }
-                cdm.objectType = type;
-                docAttrs.Add(cdm);
             }
             return docAttrs;
         }

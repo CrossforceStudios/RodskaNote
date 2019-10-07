@@ -12,6 +12,8 @@
         xmlns:rodska_attrs="clr-namespace:RodskaNote.Attributes"
     ShowTitleBar="True"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:nodelist="clr-namespace:NodeNetwork.Toolkit.NodeList;assembly=NodeNetworkToolkit"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     mc:Ignorable="d"
     GlowBrush="{DynamicResource AccentColorBrush}"
     x:Name="entryWindow"
@@ -42,7 +44,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-
         </Grid.RowDefinitions>
         <fluent:Ribbon Grid.Row="0">
             <fluent:Ribbon.Menu>
@@ -54,7 +55,17 @@
                 </fluent:Backstage>
             </fluent:Ribbon.Menu>
             <fluent:RibbonTabItem Header="Home">
-                
+                <fluent:RibbonGroupBox Header="Editing Operations">
+                    <fluent:Button Header="Paste" LargeIcon="{Binding ElementName=entryWindow, Path=PasteIcon}" Icon="{Binding ElementName=entryWindow, Path=PasteIcon}"  Command="{Binding PasteCommand, ElementName=entryWindow}">
+                        
+                    </fluent:Button>
+                    <fluent:Button Header="Cut" LargeIcon="{Binding ElementName=entryWindow, Path=CutIcon}" Icon="{Binding ElementName=entryWindow, Path=CutIcon}"  Command="{Binding CutCommand, ElementName=entryWindow}">
+
+                    </fluent:Button>
+                    <fluent:Button Header="Copy" LargeIcon="{Binding ElementName=entryWindow, Path=CopyIcon}" Icon="{Binding ElementName=entryWindow, Path=CopyIcon}"  Command="{Binding CopyCommand, ElementName=entryWindow}">
+
+                    </fluent:Button>                    
+                </fluent:RibbonGroupBox>
             </fluent:RibbonTabItem>
             <fluent:RibbonTabItem Header="Create">
                 <fluent:RibbonGroupBox Header="Interactions" x:Name="CreateInteractions" Width="Auto"  ItemsSource="{Binding Source={x:Static local:App.Current}, Path=InteractionModels}" MinWidth="200">
@@ -105,8 +116,12 @@
                             </xcad:LayoutDocument>
                         </xcad:LayoutDocumentPane>
                     </xcad:LayoutDocumentPaneGroup>
-                    <xcad:LayoutAnchorablePaneGroup DockWidth="125">
-
+                    <xcad:LayoutAnchorablePaneGroup DockWidth="150">
+                        <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorable ContentId="editorTools" Title="Editor Tools">
+                                <nodelist:NodeListView x:Name="editorNodes"/>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
                     </xcad:LayoutAnchorablePaneGroup>
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>

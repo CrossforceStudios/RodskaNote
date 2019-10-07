@@ -2,7 +2,9 @@
 using Catel.MVVM;
 using Catel.MVVM.Views;
 using Catel.Services;
+using NodeNetwork.ViewModels;
 using RodskaNote.Attributes;
+using RodskaNote.Models;
 using RodskaNote.Providers;
 using RodskaNote.Services;
 using RodskaNote.Services.Interfaces;
@@ -29,7 +31,9 @@ namespace RodskaNote
         public ObservableCollection<CreativeDocumentRepresentation> InteractionModels { get; set; } = new ObservableCollection<CreativeDocumentRepresentation>();
         public IServiceLocator serviceLocator;
         public IUIVisualizerService uiVisualizerService;
+        private IViewModelLocator viewModelLocator;
         public MasterViewModel currentMainVM;
+        public List<Type> nodeTypes = new List<Type>();
         public App()
         {
             serviceLocator = ServiceLocator.Default;
@@ -37,8 +41,14 @@ namespace RodskaNote
 
         }
 
+
+     
         public void LoadDependencies()
         {
+            foreach(Type type in CreativeDocumentModel.GetDocumentTypes<WorldDocument>())
+            {
+                _ = type.GetMethod("InitializeDocumentType", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Invoke(null, new object[] { uiVisualizerService, viewModelLocator });
+            }
             InteractionModels = new ObservableCollection<CreativeDocumentRepresentation>();
             ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes();
             foreach (CreativeDocumentRepresentation rep in _InteractionModels)
@@ -52,11 +62,9 @@ namespace RodskaNote
             Console.WriteLine("Starting RodskaNote...");
 
             uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
-            var viewModelLocator = ServiceLocator.Default.ResolveType<IViewModelLocator>();
+            viewModelLocator = ServiceLocator.Default.ResolveType<IViewModelLocator>();
             viewModelLocator.Register<MainWindow, MasterViewModel>();
-            viewModelLocator.Register<DialogueView, DialogueViewModel>();
 
-            uiVisualizerService.Register(typeof(DialogueViewModel), typeof(DialogueView), true);
             uiVisualizerService.Register(typeof(MasterViewModel), typeof(MainWindow), true);
             LoadDependencies();
         }

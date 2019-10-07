@@ -16,6 +16,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             
             </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="RodskaTabBackground" Color="#FF55AA7F"/>
+            <SolidColorBrush x:Key="RodskaYellowButton" Color="#FFFFE87E"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
