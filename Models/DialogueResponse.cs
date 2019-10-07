@@ -1,4 +1,5 @@
 ﻿using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
 using Catel.Services;
 using NodeNetwork.Views;
@@ -32,6 +33,10 @@ namespace RodskaNote.Models
 
         public static readonly PropertyData OrderProperty = RegisterProperty("Order", typeof(int), () => 0);
 
+        public override void SaveDocumentAs(ITypeFactory factory)
+        {
+           
+        }
         public static new void PopulateEditor(Dictionary<string, Dictionary<string, object>> details)
         {
             App app = (App)App.Current;

@@ -1,4 +1,5 @@
 ﻿using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
 using Catel.Services;
 using System;
@@ -26,6 +27,18 @@ namespace RodskaNote.Models
 
         public static readonly PropertyData TitleProperty = RegisterProperty("Title", typeof(string), () => "Untitled");
 
+        public string Type
+        {
+            get { return GetValue<string>(TypeProperty); }
+            set { SetValue(TypeProperty, value);  }
+        }
+        public static string GetTypeString()
+        {
+            return "WorldDocument";
+        }
+
+        public static readonly PropertyData TypeProperty = RegisterProperty("Type", typeof(string), () => "WorldDocument");
+
 
 #pragma warning disable IDE0060 // Remove unused parameter
         public static void InitializeDocumentType(IUIVisualizerService uiVisualizerService, IViewModelLocator viewModelLocator)
@@ -33,7 +46,7 @@ namespace RodskaNote.Models
 #pragma warning restore IDE0060 // Remove unused parameter
         
         }
-
+        public abstract void SaveDocumentAs(ITypeFactory factory);
         public abstract void Compile();
 
         public string CompilationResult { get; set; }

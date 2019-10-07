@@ -1,4 +1,5 @@
 ﻿using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
 using Catel.Services;
 using NodeNetwork.Toolkit.NodeList;
@@ -20,6 +21,11 @@ namespace RodskaNote.Models
         {
             get { return GetValue < ObservableCollection<DialoguePrompt>>(ChainedPromptsProperty); }
             set { SetValue(ChainedPromptsProperty, value);  }
+        }
+
+        public override void SaveDocumentAs(ITypeFactory factory)
+        {
+
         }
 
         public static readonly PropertyData ChainedPromptsProperty = RegisterProperty("ChainedPrompts", typeof(ObservableCollection<DialoguePrompt>), () => new ObservableCollection<DialoguePrompt>());

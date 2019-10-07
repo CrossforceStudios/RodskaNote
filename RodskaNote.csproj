@@ -78,6 +78,9 @@
   <PropertyGroup>
     <StartupObject>RodskaNote.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Catel.Core, Version=5.11.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Catel.Core.5.11.2\lib\net46\Catel.Core.dll</HintPath>
@@ -369,6 +372,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="favicon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

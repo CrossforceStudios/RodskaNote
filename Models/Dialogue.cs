@@ -15,14 +15,21 @@ using RodskaNote.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Layout;
+using NodeNetwork.ViewModels;
+using RodskaNote.Controls.Nodes.Primitives;
+using Catel.Runtime.Serialization.Xml;
+using Catel.Runtime.Serialization;
+using NodeNetwork.Toolkit.Layout.ForceDirected;
 
 namespace RodskaNote
 {
@@ -94,7 +101,23 @@ namespace RodskaNote
 
         public static event EventHandler<UICompletedEventArgs> DialogueAdded;
 
-       
+
+        public override void SaveDocumentAs(ITypeFactory factory)
+        {
+
+            XmlSerializer seri = new XmlSerializer(new SerializationManager(), new DataContractSerializerFactory(), new XmlNamespaceManager(), factory, new ObjectAdapter());
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Rodska Note Documents (.rndml)|*.rndml";
+            dlg.FileName = "Dialogue";
+            dlg.DefaultExt = ".rndml";
+            bool? result  = dlg.ShowDialog();
+            if(result == true)
+            {
+                FileStream stream = new FileStream(dlg.FileName,FileMode.Create);
+                seri.Serialize(this, stream);
+                stream.Close();
+            }
+        }
         public bool IsCanceled
         {
             get; 
@@ -349,15 +372,182 @@ namespace RodskaNote
             {
                 return;
             }
-            var dialogVM = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DialogueViewModel>((Dialogue)mainWindow.CurrentDocument);
+            Dialogue dialogue = (Dialogue)mainWindow.CurrentDocument;
+            DialogueViewModel dialogVM = typeFactory.CreateInstanceWithParametersAndAutoCompletion<DialogueViewModel>(dialogue);
             DialogueControl control = new DialogueControl(dialogVM);
             control.conversationWorkspace.ViewModel = new NodeNetwork.ViewModels.NetworkViewModel();
-            DialogueNode node = new DialogueNode(dialogVM.Dialogue);
-            node.Name = dialogVM.Dialogue.Title;
-            control.conversationWorkspace.ViewModel.Nodes.Add(node);
-            control.CurrentDocument = dialogVM.Dialogue;
-            document.Content = control;
+            DialogueNode node = new DialogueNode(dialogue);
 
+            using (control.ConversationWorkspace.ViewModel.SuppressChangeNotifications())
+            {
+                Dictionary<string, DialoguePromptNode> PromptNodes = new Dictionary<string, DialoguePromptNode>();
+                Dictionary<string, DialogueResponseNode> ResponseNodes = new Dictionary<string, DialogueResponseNode>();
+                
+                if (dialogue.Prompts.Count > 0)
+                {
+                    foreach (DialoguePrompt prompt in dialogue.Prompts)
+                    {
+                        DialoguePromptNode dialoguePrompt = new DialoguePromptNode();
+                        StringNode SpeechNode = new StringNode();
+                        SpeechNode.ValueEditor.Value = prompt.Speech;
+                        ConnectionViewModel speechToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialoguePrompt.SpeechInput, SpeechNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(SpeechNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(speechToPrompt);
+
+                        StringNode TitleNode = new StringNode();
+                        TitleNode.ValueEditor.Value = prompt.Title;
+                        ConnectionViewModel titleToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialoguePrompt.Title, TitleNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(TitleNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(titleToPrompt);
+
+                        IntegerNode PriorityNode = new IntegerNode();
+                        PriorityNode.ValueEditor.Value = prompt.Priority;
+                        ConnectionViewModel priorityToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialoguePrompt.Priority, PriorityNode.Output);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(PriorityNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(priorityToPrompt);
+
+                        StringNode ActionLuaNode = new StringNode();
+                        ActionLuaNode.ValueEditor.Value = prompt.ActionLua ?? "";
+                        ConnectionViewModel actionLuaToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialoguePrompt.ActionLua, ActionLuaNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(ActionLuaNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(actionLuaToPrompt);
+
+                        StringNode ConditionLuaNode = new StringNode();
+                        ActionLuaNode.ValueEditor.Value = prompt.ConditionLua ?? "return true";
+                        ConnectionViewModel conditionLuaToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialoguePrompt.ConditionLua, ConditionLuaNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(ConditionLuaNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(conditionLuaToPrompt);
+
+                        ConnectionViewModel promptToDialogue = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, node.Prompts, dialoguePrompt.FinalPrompt);
+                        ConnectionViewModel promptToDialogue2;
+                        if (DialoguePrompt.GetLeafWithName(prompt.Title, dialogue.InitialPrompts) != null)
+                        {
+                            promptToDialogue2 = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, node.InitialPrompts, dialoguePrompt.FinalPrompt);
+                            control.ConversationWorkspace.ViewModel.Connections.Add(promptToDialogue2);
+                        }
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(dialoguePrompt);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(promptToDialogue);
+
+                        PromptNodes[prompt.Title] = dialoguePrompt;
+                    }
+                }
+
+                if (dialogue.Responses.Count > 0)
+                {
+                    Console.WriteLine("Responses found.");
+                    foreach (DialogueResponse response in dialogue.Responses)
+                    {
+                        Console.WriteLine(response);
+                        DialogueResponseNode dialogueResponse = new DialogueResponseNode();
+                        StringNode SpeechNode = new StringNode();
+                        SpeechNode.ValueEditor.Value = response.Speech;
+                        ConnectionViewModel speechToResponse = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialogueResponse.SpeechInput, SpeechNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(SpeechNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(speechToResponse);
+
+                        StringNode TitleNode = new StringNode();
+                        TitleNode.ValueEditor.Value = response.Title;
+                        ConnectionViewModel titleToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialogueResponse.Title, TitleNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(TitleNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(titleToPrompt);
+
+                        IntegerNode OrderNode = new IntegerNode();
+                        OrderNode.ValueEditor.Value = response.Order;
+                        ConnectionViewModel priorityToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialogueResponse.Order, OrderNode.Output);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(OrderNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(priorityToPrompt);
+
+                        StringNode ActionLuaNode = new StringNode();
+                        ActionLuaNode.ValueEditor.Value = response.ActionLua ?? "";
+                        ConnectionViewModel actionLuaToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialogueResponse.ActionLua, ActionLuaNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(ActionLuaNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(actionLuaToPrompt);
+
+                        StringNode ConditionLuaNode = new StringNode();
+                        ActionLuaNode.ValueEditor.Value = response.ConditionLua ?? "return true";
+                        ConnectionViewModel conditionLuaToPrompt = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, dialogueResponse.ConditionLua, ConditionLuaNode.StringOutput);
+
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(ConditionLuaNode);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(conditionLuaToPrompt);
+
+                        ConnectionViewModel promptToDialogue = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, node.Responses, dialogueResponse.FinalPrompt);
+                        control.ConversationWorkspace.ViewModel.Nodes.Add(dialogueResponse);
+                        control.ConversationWorkspace.ViewModel.Connections.Add(promptToDialogue);
+
+                        ResponseNodes[response.Title] = dialogueResponse;
+
+                    }
+                }
+
+                foreach(DialoguePrompt prompt in dialogue.Prompts)
+                {
+                    DialoguePromptNode pNode = PromptNodes[prompt.Title];
+                    if (prompt.Responses.Count > 0 && pNode != null)
+                    {
+                        foreach(DialogueResponse response in prompt.Responses)
+                        {
+                            if (ResponseNodes[response.Title] != null) {
+                                ConnectionViewModel connection = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, pNode.Responses, ResponseNodes[response.Title].FinalPrompt);
+                                control.ConversationWorkspace.ViewModel.Connections.Add(connection);
+                            }
+                        }
+                        if (prompt.ChainedPrompts.Count > 0 && pNode != null)
+                        {
+                            foreach (DialoguePrompt prompt1 in prompt.ChainedPrompts)
+                            {
+                                if (PromptNodes[prompt.Title] != null)
+                                {
+                                    ConnectionViewModel connection = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, pNode.ChainedPromptsInput, PromptNodes[prompt.Title].FinalPrompt);
+                                    control.ConversationWorkspace.ViewModel.Connections.Add(connection);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (DialogueResponse response in dialogue.Responses)
+                {
+                    DialogueResponseNode rNode = ResponseNodes[response.Title];
+                    if (response.Prompts.Count > 0 && rNode != null)
+                    {
+                        foreach (DialoguePrompt prompt in response.Prompts)
+                        {
+                            if (PromptNodes[prompt.Title] != null)
+                            {
+                                ConnectionViewModel connection = new ConnectionViewModel(control.ConversationWorkspace.ViewModel, rNode.PromptsInput, PromptNodes[prompt.Title].FinalPrompt);
+                                control.ConversationWorkspace.ViewModel.Connections.Add(connection);
+                            }
+                        }
+                    }
+                }
+            }
+            node.Name = dialogue.Title;
+            control.conversationWorkspace.ViewModel.Nodes.Add(node);
+
+            control.CurrentDocument = dialogue;
+            document.Content = control;
+            
+           
+
+        }
+
+        public Dialogue()
+        {
+            Type = "Dialogue";
+        }
+
+        public static new string GetTypeString()
+        {
+            return "Dialogue";
         }
     }
 }

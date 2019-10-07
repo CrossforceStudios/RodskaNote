@@ -1,6 +1,8 @@
 ﻿using Catel.MVVM;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using NodeNetwork.Toolkit.Layout.ForceDirected;
+using NodeNetwork.Views;
 using RodskaNote.Models;
 using System;
 using System.Collections.Generic;
@@ -43,6 +45,11 @@ namespace RodskaNote.Controls.Document
             
         }
 
+        public NetworkView ConversationWorkspace
+        {
+            get { return conversationWorkspace; }
+        }
+
         private WorldDocument worldDocument;
 
         public WorldDocument CurrentDocument
@@ -60,6 +67,16 @@ namespace RodskaNote.Controls.Document
             Dialogue doc = window.CurrentDocument as Dialogue;
             doc.Compile();
             compilationLua.Text = doc.CompilationResult;
+        }
+
+        private void LayoutO_Click(object sender, RoutedEventArgs e)
+        {
+            ForceDirectedLayouter layouter = new ForceDirectedLayouter();
+            var config = new Configuration
+            {
+                Network = ConversationWorkspace.ViewModel,
+            };
+            layouter.Layout(config, 20000);
         }
     }
 }

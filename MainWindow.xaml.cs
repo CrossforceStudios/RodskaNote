@@ -1,7 +1,11 @@
-﻿using Catel.MVVM;
+﻿using Catel.IoC;
+using Catel.MVVM;
+using Catel.Runtime.Serialization;
+using Catel.Runtime.Serialization.Xml;
 using Catel.Windows;
 using Fluent;
 using FontAwesome.WPF;
+using Microsoft.Win32;
 using NodeNetwork.Toolkit.NodeList;
 using ReactiveUI;
 using RodskaNote.Attributes;
@@ -12,6 +16,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
@@ -158,6 +163,53 @@ namespace RodskaNote
         private void DocumentGrid_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
             CurrentDocumentTitle = CurrentDocument.Title;
+        }
+
+        private void CanSaveCurrentDocument(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (CurrentDocument != null);
+        }
+
+        private void SaveCurrentDocument(object sender, ExecutedRoutedEventArgs e)
+        {
+            CurrentDocument.SaveDocumentAs(vm.GetTypeFactory());
+        }
+
+        private void CanOpenNewDocument(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+
+
+        private void OpenNewDocument(object sender, ExecutedRoutedEventArgs e)
+        {
+            List<Type> t = CreativeDocumentModel.GetDocumentTypes<WorldDocument>();
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Rodska Note Documents (.rndml)|*.rndml";
+            dlg.DefaultExt = ".rndml";
+            dlg.Title = "Open RodskaNote Document...";
+            bool? result = dlg.ShowDialog();
+            if (result == true)
+            {
+                XmlSerializer seri = new XmlSerializer(new SerializationManager(),new DataContractSerializerFactory(), new XmlNamespaceManager(), vm.GetTypeFactory(), new ObjectAdapter());
+                FileStream stream = new FileStream(dlg.FileName, FileMode.Open);
+                WorldDocument doc = new Dialogue();
+                foreach(Type type in t)
+                {
+                    MethodInfo method = type.GetMethod("GetTypeString", BindingFlags.Public | BindingFlags.Static);
+                    if (method != null)
+                    {
+                        doc = (WorldDocument)seri.Deserialize(doc, stream);
+                        if ((string)method.Invoke(null,null) == doc.Type)
+                        {
+                            CurrentDocument = doc;
+                            stream.Close();
+                            break;
+                        }
+                    }
+                }   
+            }
         }
     }
 }

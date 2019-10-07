@@ -39,6 +39,14 @@
             <Button Content="settings" />
         </Metro:WindowCommands>
     </Metro:MetroWindow.RightWindowCommands>
+    <Metro:MetroWindow.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.SaveAs"
+                  Executed="SaveCurrentDocument"
+                  CanExecute="CanSaveCurrentDocument"/>
+        <CommandBinding Command="ApplicationCommands.Open"
+                  Executed="OpenNewDocument"
+                  CanExecute="CanOpenNewDocument"/>        
+    </Metro:MetroWindow.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -51,7 +59,12 @@
                     <fluent:BackstageTabControl x:Name="CreateIntBackstage">
                         <fluent:BackstageTabItem Header="Create..." ></fluent:BackstageTabItem>
                         <fluent:Button x:Name="newProject" Header="New Project"></fluent:Button>
+                        <fluent:BackstageTabItem Header="Save..."></fluent:BackstageTabItem>
+                        <fluent:Button Header="Save As..." Name="saveAsBtn" Command="ApplicationCommands.SaveAs"></fluent:Button>
+                        <fluent:BackstageTabItem Header="Load..."></fluent:BackstageTabItem>
+                        <fluent:Button Header="Load Document" Name="loadDocBtn" Command="ApplicationCommands.Open"></fluent:Button>
                     </fluent:BackstageTabControl>
+           
                 </fluent:Backstage>
             </fluent:Ribbon.Menu>
             <fluent:RibbonTabItem Header="Home">

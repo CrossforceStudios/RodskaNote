@@ -76,8 +76,15 @@
                 </TabControl>
             </TabItem>
         </TabControl>
-        <catel:ToolBar  Name="DocumentControls" Grid.Row="2" Background="{DynamicResource RodskaYellowButton}">
-            <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click" Background="{DynamicResource RodskaYellowButton}"/>
-        </catel:ToolBar>
+        <catel:ToolBarTray Grid.Row="2">
+            <catel:ToolBar  Name="DocumentControls" Header="Compilation"  Background="{DynamicResource RodskaYellowButton}">
+                <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click" Background="{DynamicResource RodskaYellowButton}"/>
+                <Button x:Name="LayoutO" Content="Reorganize Document" Click="LayoutO_Click" Background="{DynamicResource RodskaYellowButton}"/>
+            </catel:ToolBar>
+            <catel:ToolBar Name="HelpTopics" Header="Help Topics">
+                <Button x:Name="HelpMain" Content="Dialogue (Help)" Background="{DynamicResource RodskaYellowButton}"></Button>
+            </catel:ToolBar>
+        </catel:ToolBarTray>
+        
     </Grid>
 </catel:UserControl>

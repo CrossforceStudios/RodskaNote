@@ -47,7 +47,6 @@ namespace RodskaNote.Controls.Nodes
             {
                 Name = "Final Result",
                 Visibility = NodeNetwork.ViewModels.EndpointVisibility.AlwaysHidden,
-                Value = this.WhenAnyObservable(vm => vm.InitialPrompts.Changed).Select(dialogue => InputDocument as Dialogue)
             };
             this.WhenAnyObservable(vm => vm.InitialPrompts.Changed, vm => vm.Prompts.Changed, vm => vm.Responses.Changed).Subscribe(ip =>
             {
@@ -56,6 +55,7 @@ namespace RodskaNote.Controls.Nodes
                 dialogue.Responses = new ObservableCollection<DialogueResponse>(Responses.Values.Items.ToList());
                 dialogue.InitialPrompts = new ObservableCollection<DialoguePrompt>(InitialPrompts.Values.Items.ToList());
                 InputDocument = dialogue;
+                Output.Value = Observable.Return(dialogue);
             });
             App app = (App)App.Current;
             MainWindow window = (MainWindow)app.MainWindow;
@@ -67,29 +67,7 @@ namespace RodskaNote.Controls.Nodes
 
         private void Window_DocumentChanged(object sender, EventArgs e)
         {
-            Dialogue dialogue = InputDocument as Dialogue;
-            dialogue.Prompts = new ObservableCollection<DialoguePrompt>(Prompts.Values.Items.ToList());
-            
-            dialogue.Responses = new ObservableCollection<DialogueResponse>(Responses.Values.Items.ToList());
-            dialogue.InitialPrompts = new ObservableCollection<DialoguePrompt>(InitialPrompts.Values.Items.ToList());
-            if(sender is DialoguePrompt)
-            {
-                DialoguePrompt sent = sender as DialoguePrompt;
-                DialoguePrompt prompt2 = DialoguePrompt.GetLeafWithName(sent.Title, dialogue.Prompts);
-                if (prompt2 != null && dialogue.Prompts.Contains(prompt2) && dialogue.InitialPrompts.Contains(prompt2)) {
-                    dialogue.Prompts.Replace(prompt2, sent);
-                    dialogue.InitialPrompts.Replace(prompt2, sent);
-                }
-            } else if (sender is DialogueResponse)
-            {
-                DialogueResponse sent = sender as DialogueResponse;
-                DialogueResponse response = DialogueResponse.GetLeafWithName(sent.Title, dialogue.Responses);
-                if (response != null && dialogue.Responses.Contains(response)) 
-                {
-                    dialogue.Responses.Replace(response, sent);
-                }
-            }
-            InputDocument = dialogue;
+
         }
     }
 
