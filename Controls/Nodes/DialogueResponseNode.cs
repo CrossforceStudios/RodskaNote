@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RodskaNote.Controls.Nodes
 {
-    class DialogueResponseNode: WorldDocumentNode<DialogueResponse>
+    public class DialogueResponseNode: WorldDocumentNode<DialogueResponse>
     {
         public ValueNodeInputViewModel<string> SpeechInput { get; set; }
         public ValueListNodeInputViewModel<DialoguePrompt> PromptsInput { get; set; }

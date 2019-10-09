@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,10 +28,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -267,6 +267,12 @@
     <Compile Include="Controls\Document\DialogueControl.xaml.cs">
       <DependentUpon>DialogueControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Document\InteractionControl.xaml.cs">
+      <DependentUpon>InteractionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Editor\FloatValueEditorView.xaml.cs">
+      <DependentUpon>FloatValueEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Editor\IntegerValueEditorView.xaml.cs">
       <DependentUpon>IntegerValueEditorView.xaml</DependentUpon>
     </Compile>
@@ -276,19 +282,39 @@
     <Compile Include="Controls\Nodes\DialogueNode.cs" />
     <Compile Include="Controls\Nodes\DialoguePromptNode.cs" />
     <Compile Include="Controls\Nodes\DialogueResponseNode.cs" />
-    <Compile Include="Controls\Nodes\IntegerNode.cs" />
-    <Compile Include="Controls\Nodes\StringNode.cs" />
+    <Compile Include="Controls\Nodes\DialogueResponseNodeView.xaml.cs">
+      <DependentUpon>DialogueResponseNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Nodes\InteractionNode.cs" />
+    <Compile Include="Controls\Nodes\Primitives\FloatNode.cs" />
+    <Compile Include="Controls\Nodes\Primitives\IntegerNode.cs" />
+    <Compile Include="Controls\Nodes\DialoguePromptNodeView.xaml.cs" />
+    <Compile Include="Controls\Nodes\Primitives\PrimitiveNode.cs" />
+    <Compile Include="Controls\Nodes\Primitives\PrimitiveNodeView.xaml.cs">
+      <DependentUpon>PrimitiveNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Nodes\Primitives\StringNode.cs" />
     <Compile Include="Controls\Nodes\WorldDocumentNode.cs" />
     <Compile Include="Controls\RodskaWindow.cs">
       <Generator>MSBuild:Compile</Generator>
     </Compile>
-    <Compile Include="DialogueView.xaml.cs">
+    <Compile Include="Models\InteractionLiteral.cs" />
+    <Compile Include="ViewModels\EditorTypes\FloatValueEditorViewModel.cs" />
+    <Compile Include="ViewModels\InteractionViewModel.cs" />
+    <Compile Include="Views\InteractionView.xaml.cs">
+      <DependentUpon>InteractionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DialogueView.xaml.cs">
       <DependentUpon>DialogueView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DialogueLeaf.cs" />
     <Compile Include="Models\DialoguePrompt.cs" />
     <Compile Include="Models\DialogueResponse.cs" />
     <Compile Include="Providers\EditProvider.cs" />
+    <Compile Include="QATWindow.xaml.cs">
+      <DependentUpon>QATWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\SliderPercentageConverter.cs" />
     <Compile Include="ViewModels\EditorTypes\IntegerValueEditorViewModel.cs" />
     <Compile Include="ViewModels\EditorTypes\StringValueEditorViewModel.cs" />
     <Compile Include="ViewModels\MainEditorViewModel.cs" />
@@ -296,6 +322,14 @@
     <Page Include="Controls\Document\DialogueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Document\InteractionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Editor\FloatValueEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Editor\IntegerValueEditorView.xaml">
       <SubType>Designer</SubType>
@@ -305,7 +339,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DialogueView.xaml">
+    <Page Include="Controls\Nodes\DialoguePromptNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Nodes\DialogueResponseNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Nodes\Primitives\PrimitiveNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InteractionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DialogueView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -330,6 +380,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="QATWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -350,6 +404,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="DialogueManifest.lua" />
+    <None Include="InteractionManifest.lua" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -374,6 +429,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="RodskaNodeIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,16 +1,21 @@
 ﻿<catel:Window
-    xmlns:catel="http://schemas.catelproject.com" x:Class="RodskaNote.DialogueView"
+    xmlns:catel="http://schemas.catelproject.com" x:Class="RodskaNote.Views.DialogueView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RodskaNote"
+        xmlns:local="clr-namespace:RodskaNote.Views"
         mc:Ignorable="d"
+     xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="New Dialogue Wizard" Height="450" Width="800">
-    <xctk:Wizard FinishButtonClosesWindow="True" CurrentPage="{Binding ElementName=IntroPage}" Cancel="Wizard_Cancel">
-        <xctk:WizardPage x:Name="IntroPage" Title="Welcome to the Dialogue Creator!" Description="This wizard will guide you in the creation of your very own dialogue."/>
-        <xctk:WizardPage x:Name="TitlePage" Title="Dialogue Title" Description="First, you must give your conversation/dialogue a name/title.">
+        Title="New Dialogue Wizard" Height="450" Width="800" x:Name="wizardView">
+    <xctk:Wizard   FinishButtonClosesWindow="True" CurrentPage="{Binding ElementName=IntroPage}" Cancel="Wizard_Cancel">
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="IntroPage" Title="Welcome to the Dialogue Creator!" Description="This wizard will guide you in the creation of your very own dialogue.">
+            <xctk:WizardPage.ExteriorPanelContent>
+                <Image Source="{Binding ElementName=wizardView, Path=DialogueIcon, Converter={fa:ImageSourceConverter}, ConverterParameter={StaticResource ImageBrush}}"></Image>
+            </xctk:WizardPage.ExteriorPanelContent>
+        </xctk:WizardPage>
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="TitlePage" Title="Dialogue Title" Description="First, you must give your conversation/dialogue a name/title.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -25,7 +30,7 @@
                 <TextBox x:Name="DialogueTitleBox" Grid.Row="1" Grid.Column="1" AutomationProperties.HelpText="The title of the dialogue." Margin="0,0,0,-24" Text="{Binding Title}" FontSize="20" TextChanged="DialogueTitleBox_TextChanged"></TextBox>
             </Grid>
         </xctk:WizardPage>
-        <xctk:WizardPage x:Name="Conversation" Title="Conversation Properties" Description="Next (if you want), set the conversation properties.">
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Conversation" Title="Conversation Properties" Description="Next (if you want), set the conversation properties.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -40,7 +45,7 @@
                 <Slider x:Name="ConvoDistanceSlider" Grid.Row="1" AutomationProperties.HelpText="The distance at which a conversation can be held." Grid.Column="1"  HorizontalAlignment="Left" Margin="165,13,0,-12" VerticalAlignment="Top" Value="{Binding ConversationDistance}" Minimum="5" Maximum="100" Height="30" Width="432" ValueChanged="ConvoDistanceSlider_ValueChanged"/>
             </Grid>
         </xctk:WizardPage>
-        <xctk:WizardPage x:Name="Trigger" Title="Trigger Properties" Description="Next (if you want), set the trigger properties.">
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Trigger" Title="Trigger Properties" Description="Next (if you want), set the trigger properties.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -60,7 +65,7 @@
                 <Slider x:Name="TriggerDistanceSlider" Grid.Row="2" AutomationProperties.HelpText="The distance at which a conversation can be trigger automatically." Grid.Column="2"  HorizontalAlignment="Left" Margin="22,0,-415,0" VerticalAlignment="Top" Value="{Binding ConversationDistance}" Minimum="5" Maximum="100" Height="20" Grid.RowSpan="2" Width="431" ValueChanged="TriggerDistanceSlider_ValueChanged"/>
             </Grid>
         </xctk:WizardPage>
-        <xctk:WizardPage x:Name="Finished" CanFinish="True" Title="Finish Dialogue Creation" Description="Congatulations! You have finished creating your conversation. To continue editing, click Finish.">
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Finished" CanFinish="True" Title="Finish Dialogue Creation" Description="Congatulations! You have finished creating your conversation. To continue editing, click Finish.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

@@ -30,13 +30,15 @@ using RodskaNote.Controls.Nodes.Primitives;
 using Catel.Runtime.Serialization.Xml;
 using Catel.Runtime.Serialization;
 using NodeNetwork.Toolkit.Layout.ForceDirected;
+using System.Windows.Shell;
+using RodskaNote.Views;
 
 namespace RodskaNote
 {
     /// <summary>
     /// <see cref="WorldDocument"/> used for storing conversation interactions between a player and an NPC.
     /// </summary>
-    [CreativeDocumentModel("Dialogue", "Conversation", "Used to make interactions between the player and an NPC.", DocumentUsage.Interaction)]
+    [CreativeDocumentModel("Dialogue", "Conversation", "Used to make interactions between the player and an NPC.", DocumentUsage.Interaction, Icon =FontAwesome.WPF.FontAwesomeIcon.Comment)]
     public class Dialogue : WorldDocument
     {
         /// <summary>
@@ -99,8 +101,6 @@ namespace RodskaNote
             return Title;
         }
 
-        public static event EventHandler<UICompletedEventArgs> DialogueAdded;
-
 
         public override void SaveDocumentAs(ITypeFactory factory)
         {
@@ -116,14 +116,32 @@ namespace RodskaNote
                 FileStream stream = new FileStream(dlg.FileName,FileMode.Create);
                 seri.Serialize(this, stream);
                 stream.Close();
+                JumpList jl = JumpList.GetJumpList(App.Current);
+                bool jpExisting = false;
+                foreach(JumpItem item in jl.JumpItems)
+                {
+                    if(item is JumpPath)
+                    {
+                        JumpPath p = item as JumpPath;
+                        if(p.Path == dlg.FileName)
+                        {
+                            jpExisting = true;
+                            break;
+                        }
+                    }
+                }
+                if(!jpExisting)
+                {
+                    JumpPath jp = new JumpPath();
+                    jp.Path = dlg.FileName;
+                    jp.CustomCategory = Type;
+                    jl.JumpItems.Add(jp);
+                    JumpList.AddToRecentCategory(jp);
+                    jl.Apply();
+                }
             }
         }
-        public bool IsCanceled
-        {
-            get; 
-            set;
-        }
-
+        
         [STAThread]
         public static async Task CreateAsync(IUIVisualizerService _uiVisualizerService, MasterViewModel viewModel)
         {
@@ -133,7 +151,7 @@ namespace RodskaNote
                   Dialogue dialogue_new = new Dialogue();
                   ITypeFactory dialogueFactory = viewModel.GetTypeFactory();
                   var dialogVM = dialogueFactory.CreateInstanceWithParametersAndAutoCompletion<DialogueViewModel>(dialogue_new);
-                  DialogueAdded += (object sender, UICompletedEventArgs e) =>
+                  DocumentAdded += (object sender, UICompletedEventArgs e) =>
                   {
                       if (!dialogue_new.IsCanceled)
                       {
@@ -144,8 +162,8 @@ namespace RodskaNote
                           window.CurrentDocument = dialogue_new;
                       }
                   };
-                  var result = await _uiVisualizerService.ShowAsync(dialogVM,DialogueAdded) ?? false;
-                  DialogueAdded -= (object sender, UICompletedEventArgs e) =>
+                  var result = await GetFromPrompt(_uiVisualizerService, dialogVM);
+                  DocumentAdded -= (object sender, UICompletedEventArgs e) =>
                   {
                       if (!dialogue_new.IsCanceled)
                       {
@@ -540,9 +558,12 @@ namespace RodskaNote
 
         }
 
+
         public Dialogue()
         {
             Type = "Dialogue";
+            DisplayType = "Conversation";
+
         }
 
         public static new string GetTypeString()

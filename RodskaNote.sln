@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RodskaNote", "RodskaNote.csproj", "{3ED8EC06-017C-4F17-996D-92D16524BC1F}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "RodskaNoteSetup", "..\RodskaNoteSetup\RodskaNoteSetup.wixproj", "{010E0088-FB87-4D14-834D-3BEC36CCADCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{3ED8EC06-017C-4F17-996D-92D16524BC1F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3ED8EC06-017C-4F17-996D-92D16524BC1F}.Release|x86.ActiveCfg = Release|x86
 		{3ED8EC06-017C-4F17-996D-92D16524BC1F}.Release|x86.Build.0 = Release|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Debug|x86.ActiveCfg = Debug|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Debug|x86.Build.0 = Debug|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Release|Any CPU.ActiveCfg = Release|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Release|x86.ActiveCfg = Release|x86
+		{010E0088-FB87-4D14-834D-3BEC36CCADCD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

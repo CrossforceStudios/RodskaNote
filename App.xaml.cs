@@ -2,6 +2,7 @@
 using Catel.MVVM;
 using Catel.MVVM.Views;
 using Catel.Services;
+using Fluent;
 using NodeNetwork.ViewModels;
 using RodskaNote.Attributes;
 using RodskaNote.Models;
@@ -19,6 +20,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Annotations;
 
 namespace RodskaNote
 {
@@ -53,7 +55,6 @@ namespace RodskaNote
             ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes();
             foreach (CreativeDocumentRepresentation rep in _InteractionModels)
             {
-                rep.Title = $"New {rep.Title}";
                 InteractionModels.Add(rep);
             }
         }
@@ -67,6 +68,8 @@ namespace RodskaNote
 
             uiVisualizerService.Register(typeof(MasterViewModel), typeof(MainWindow), true);
             LoadDependencies();
+
         }
+
     }
 }

@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace RodskaNote.Controls.Nodes.Primitives
 {
-    class IntegerNode: NodeViewModel
+   public class IntegerNode: PrimitiveNode
     {
         static IntegerNode()
         {
-            Splat.Locator.CurrentMutable.Register(() => new NodeView(), typeof(IViewFor<IntegerNode>));
+            Splat.Locator.CurrentMutable.Register(() => new PrimitiveNodeView(), typeof(IViewFor<IntegerNode>));
         }
 
         public IntegerValueEditorViewModel ValueEditor { get; } = new IntegerValueEditorViewModel();

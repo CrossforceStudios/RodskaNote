@@ -1,0 +1,84 @@
+﻿<catel:Window
+    xmlns:catel="http://schemas.catelproject.com" x:Class="RodskaNote.Views.InteractionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RodskaNote.Views"
+        xmlns:rodskaModels="clr-namespace:RodskaNote.Models"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+     xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="New Interaction Wizard" Height="450" Width="800" x:Name="wizardView">
+    <catel:Window.Resources>
+        <ObjectDataProvider x:Key="InteractionContextEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="rodskaModels:InteractionContext"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="InputContextEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="rodskaModels:ActionType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>        
+    </catel:Window.Resources>
+        <xctk:Wizard   FinishButtonClosesWindow="True" CurrentPage="{Binding ElementName=Context}" Cancel="Wizard_Cancel">
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="IntroPage" Title="Welcome to the Interaction Creator!" Description="This wizard will guide you in the creation of your very own keybound interaction.">
+
+        </xctk:WizardPage>
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="TitlePage" Title="Interaction Title" Description="First, you must give your interaction a name/title.">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="1" Content="Interaction Title" Margin="0,0,10,0"></Label>
+                <TextBox x:Name="InteractionTitleBox" Grid.Row="1" Grid.Column="1" AutomationProperties.HelpText="The title of the interaction." Margin="0,0,0,-24" Text="{Binding Title}" FontSize="20" TextChanged="InteractionTitleBox_TextChanged" ></TextBox>
+            </Grid>
+        </xctk:WizardPage>
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Context" Title="Context Properties" Description="Next (if you want), set the context properties.">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="1" Content="Main Context" Margin="0,0,10,0"></Label>
+                <ComboBox Name="ContextControl" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={StaticResource InteractionContextEnum}}"  SelectionChanged="ContextControl_SelectionChanged">
+
+                </ComboBox>
+                <Label Grid.Row="2" Grid.Column="1" Content="Input Context" Margin="0,0,10,0"></Label>
+
+                <ComboBox Name="InContextControl" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Source={StaticResource InputContextEnum}}"  SelectionChanged="InContextControl_SelectionChanged">
+
+                </ComboBox>
+            </Grid>
+        </xctk:WizardPage>
+        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Finished" CanFinish="True" Title="Finish Interaction Creation" Description="Congatulations! You have finished creating your interaction. To continue editing, click Finish.">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </xctk:WizardPage>
+    </xctk:Wizard>
+</catel:Window>

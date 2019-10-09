@@ -27,6 +27,7 @@ namespace RodskaNote.Models
 
         public static readonly PropertyData TitleProperty = RegisterProperty("Title", typeof(string), () => "Untitled");
 
+        public string DisplayType { get; set; } = "World Document";
         public string Type
         {
             get { return GetValue<string>(TypeProperty); }
@@ -49,12 +50,25 @@ namespace RodskaNote.Models
         public abstract void SaveDocumentAs(ITypeFactory factory);
         public abstract void Compile();
 
+        public bool IsCanceled
+        {
+            get;
+            set;
+        }
+
+        public static event EventHandler<UICompletedEventArgs> DocumentAdded;
+
         public string CompilationResult { get; set; }
         public static void CreateEditor(LayoutDocument document)
         {
             
         }
 
+        public static async Task<bool?> GetFromPrompt(IUIVisualizerService _uiVisualizerService, ViewModelBase viewModel)
+        {
+            var result = await _uiVisualizerService.ShowAsync(viewModel, DocumentAdded) ?? false;
+            return result;
+        }
         public static void PopulateEditor(Dictionary<string, Dictionary<string, object>> details) { }
     }
 }

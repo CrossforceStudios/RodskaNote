@@ -16,6 +16,7 @@ namespace RodskaNote.ViewModels
         {
             ListViewModel.AddNodeType(() => new StringNode());
             ListViewModel.AddNodeType(() => new IntegerNode());
+            ListViewModel.AddNodeType(() => new FloatNode());
 
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
 using Catel.Services;
+using FontAwesome.WPF;
 using RodskaNote.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,13 @@ namespace RodskaNote.Attributes
 
         public static readonly PropertyData CreationCommandProperty = RegisterProperty("CreationCommand", typeof(Func<IUIVisualizerService, MasterViewModel, Task>), null);
 
+        public FontAwesomeIcon Icon
+        {
+            get { return GetValue<FontAwesomeIcon>(IconProperty);  }
+            set { SetValue(IconProperty, value);  }
+        }
+
+        public static readonly PropertyData IconProperty = RegisterProperty("Icon", typeof(FontAwesomeIcon), () => FontAwesomeIcon.Windows);
         public CreativeDocumentRepresentation()
         {
             CreateDocument = new TaskCommand(CreateDocumentAsync);

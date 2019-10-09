@@ -56,8 +56,18 @@ namespace RodskaNote
         public RoutedUICommand PasteCommand { get; set; } = ApplicationCommands.Paste;
         public RoutedUICommand CutCommand { get; set; } = ApplicationCommands.Cut;
 
+        public FontAwesomeIcon DocumentIcon { get; } = FontAwesomeIcon.File;
         public RoutedUICommand CopyCommand { get; set; } = ApplicationCommands.Copy;
 
+        private Dictionary<Type, FontAwesomeIcon> documentIcons;
+        public string DisplayType { get; set; }
+        public string Version
+        {
+            get {
+                App app = (App)App.Current;
+                return app.Version;
+           }
+        }
         public MainWindow()
         {
             vm = (MasterViewModel)new MasterViewModel(Dispatcher.CurrentDispatcher);
@@ -65,10 +75,10 @@ namespace RodskaNote
             CurrentDocumentTitle = "RodskaNote";
             App app = (App)App.Current;
             this.ViewModel = new MainEditorViewModel();
+            documentIcons = new Dictionary<Type, FontAwesomeIcon>();
             PasteIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Paste, Brushes.Black);
             CutIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Cut, Brushes.Black);
             CopyIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Copy, Brushes.Black);
-
             foreach (Type t in CreativeDocumentModel.GetDocumentTypes<WorldDocument>())
             {
                 MethodInfo method = t.GetMethod("PopulateEditor", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -80,7 +90,12 @@ namespace RodskaNote
                         {"NodeModel",editorNodes }
 
                     } } } });
+                    
                 }
+            }
+            foreach(CreativeDocumentRepresentation cdm in app.InteractionModels)
+            {
+                documentIcons.Add(cdm.ObjectType, cdm.Icon);
             }
             this.WhenActivated(d =>
             {
@@ -111,6 +126,8 @@ namespace RodskaNote
             set { 
                 vm.CurrentDocument = value;
                 DocumentGrid.SelectedObject = vm.CurrentDocument;
+                DocumentGrid.SelectedObjectTypeName = vm.CurrentDocument.DisplayType;
+                DocumentGrid.SelectedObjectName = vm.CurrentDocument.ToString();
                 CurrentDocumentTitle = vm.CurrentDocument.Title;
                 DocumentGrid.PropertyDefinitions = new PropertyDefinitionCollection
                 {
@@ -127,14 +144,17 @@ namespace RodskaNote
                     }
                 };
                 Type t = vm.CurrentDocument.GetType();
+                DisplayType = CurrentDocument.DisplayType;
                 PropertyDefinitionCollection newProps = EditProvider.GetAvailableProperties(t);
                 foreach(PropertyDefinition prop in newProps)
                 {
                     DocumentGrid.PropertyDefinitions.Add(prop);
                 }
-               
                 t.GetMethod("CreateEditor", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null,new object[] { currentWorldDocument});
-                
+                if (documentIcons.ContainsKey(t))
+                {
+                    currentWorldDocument.IconSource = ImageAwesome.CreateImageSource(documentIcons[t], Brushes.Black, emSize: 16);
+                }
 
             }
 

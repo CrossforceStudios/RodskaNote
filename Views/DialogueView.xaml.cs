@@ -1,4 +1,5 @@
 ﻿using Catel.MVVM;
+using FontAwesome.WPF;
 using RodskaNote.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RodskaNote
+namespace RodskaNote.Views
 {
     /// <summary>
     /// Interaction logic for DialogueView.xaml
@@ -22,6 +23,8 @@ namespace RodskaNote
     public partial class DialogueView : Catel.Windows.Window
     {
         private DialogueViewModel vm;
+
+        public FontAwesomeIcon DialogueIcon { get; set; } = FontAwesomeIcon.Comment;
         public DialogueView(IViewModel viewModel)
         {
             vm = (DialogueViewModel)viewModel;

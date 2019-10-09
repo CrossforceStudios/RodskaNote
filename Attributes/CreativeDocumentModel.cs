@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Catel.Data;
 using Catel.Services;
+using FontAwesome.WPF;
 using RodskaNote.Models;
 using RodskaNote.ViewModels;
 
@@ -58,6 +59,10 @@ namespace RodskaNote.Attributes
         /// </summary>
         public DocumentUsage Usage;
 
+        /// <summary>
+        /// The icon used for display in the Ribbon.
+        /// </summary>
+        public FontAwesomeIcon Icon;
 
         public Func<IUIVisualizerService, MasterViewModel, Task> CreationCommand;
 
@@ -126,7 +131,8 @@ namespace RodskaNote.Attributes
                 Name = Name,
                 Title = Title,
                 Description = Description,
-                Usage = Usage
+                Usage = Usage,
+                Icon = Icon
             };
             if (CreationCommand != null)
             {

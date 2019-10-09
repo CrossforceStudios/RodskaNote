@@ -48,7 +48,7 @@ namespace RodskaNote.Models
 
         public static new void InitializeDocumentType(IUIVisualizerService uiVisualizerService, IViewModelLocator viewModelLocator)
         {
-            Splat.Locator.CurrentMutable.Register(() => new NodeView(), typeof(IViewFor<DialogueResponseNode>));
+            Splat.Locator.CurrentMutable.Register(() => new DialogueResponseNodeView(), typeof(IViewFor<DialogueResponseNode>));
 
         }
 

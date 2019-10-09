@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RodskaNote.Controls.Nodes
 {
-    class DialogueNode: WorldDocumentNode<Dialogue>
+    public class DialogueNode: WorldDocumentNode<Dialogue>
     {
         public ValueListNodeInputViewModel<DialoguePrompt> InitialPrompts { get; set; }
 
@@ -60,7 +60,7 @@ namespace RodskaNote.Controls.Nodes
             App app = (App)App.Current;
             MainWindow window = (MainWindow)app.MainWindow;
             window.DocumentChanged += Window_DocumentChanged;
-
+            CanBeRemovedByUser = false;
 
 
         }

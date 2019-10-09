@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RodskaNote.Controls.Nodes.Primitives
 {
-    class StringNode: NodeViewModel
+   public class StringNode: PrimitiveNode
     {
         public StringValueEditorViewModel ValueEditor { get; } = new StringValueEditorViewModel();
 
@@ -25,7 +25,7 @@ namespace RodskaNote.Controls.Nodes.Primitives
 
         static StringNode()
         {
-            Splat.Locator.CurrentMutable.Register(() => new NodeView(), typeof(IViewFor<StringNode>));
+            Splat.Locator.CurrentMutable.Register(() => new PrimitiveNodeView(), typeof(IViewFor<StringNode>));
         }
 
         public StringNode()
