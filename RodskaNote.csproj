@@ -82,6 +82,9 @@
     <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AvalonDock.Themes.VS2013, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AvalonDock.Themes.VS2013.2.0.0.5\lib\AvalonDock.Themes.VS2013.dll</HintPath>
+    </Reference>
     <Reference Include="Catel.Core, Version=5.11.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Catel.Core.5.11.2\lib\net46\Catel.Core.dll</HintPath>
     </Reference>
@@ -222,6 +225,7 @@
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -241,8 +245,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.6.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.9.15603.14400, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <HintPath>packages\AvalonDock.Themes.VS2013.2.0.0.5\lib\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>packages\Extended.Wpf.Toolkit.3.6.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
@@ -295,8 +299,17 @@
     </Compile>
     <Compile Include="Controls\Nodes\Primitives\StringNode.cs" />
     <Compile Include="Controls\Nodes\WorldDocumentNode.cs" />
+    <Compile Include="Controls\RibbonCustomizer.xaml.cs">
+      <DependentUpon>RibbonCustomizer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Ribbon\RibbonCommandBox.xaml.cs">
+      <DependentUpon>RibbonCommandBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RodskaWindow.cs">
       <Generator>MSBuild:Compile</Generator>
+    </Compile>
+    <Compile Include="Controls\Whiteboard.xaml.cs">
+      <DependentUpon>Whiteboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\InteractionLiteral.cs" />
     <Compile Include="ViewModels\EditorTypes\FloatValueEditorViewModel.cs" />
@@ -319,6 +332,7 @@
     <Compile Include="ViewModels\EditorTypes\StringValueEditorViewModel.cs" />
     <Compile Include="ViewModels\MainEditorViewModel.cs" />
     <Compile Include="ViewModels\MasterViewModel.cs" />
+    <Compile Include="Whiteboard\WhiteboardMode.cs" />
     <Page Include="Controls\Document\DialogueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -348,6 +362,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Nodes\Primitives\PrimitiveNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RibbonCustomizer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Ribbon\RibbonCommandBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Whiteboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

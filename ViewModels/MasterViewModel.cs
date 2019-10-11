@@ -12,6 +12,7 @@
     using System;
     using System.Windows.Threading;
     using RodskaNote.Models;
+    using System.Windows.Input;
 
     public class MasterViewModel : ViewModelBase
     {

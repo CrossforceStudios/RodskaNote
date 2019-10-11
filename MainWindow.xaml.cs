@@ -33,6 +33,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Xceed.Wpf.AvalonDock.Controls;
+using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace RodskaNote
@@ -57,7 +59,13 @@ namespace RodskaNote
         public RoutedUICommand CutCommand { get; set; } = ApplicationCommands.Cut;
 
         public FontAwesomeIcon DocumentIcon { get; } = FontAwesomeIcon.File;
+
+        public FontAwesomeIcon CompileIcon { get; } = FontAwesomeIcon.Code;
         public RoutedUICommand CopyCommand { get; set; } = ApplicationCommands.Copy;
+
+        public RoutedUICommand FloatCommand { get; set; } = new RoutedUICommand("Float", "FloatTab", typeof(MainWindow));
+
+        public RoutedUICommand CompileCurrentDocument { get; set; } = new RoutedUICommand("Compile Document","CompileDocument",typeof(MainWindow));
 
         private Dictionary<Type, FontAwesomeIcon> documentIcons;
         public string DisplayType { get; set; }
@@ -97,6 +105,7 @@ namespace RodskaNote
             {
                 documentIcons.Add(cdm.ObjectType, cdm.Icon);
             }
+            
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.ListViewModel, v => v.editorNodes.ViewModel).DisposeWith(d);
@@ -129,6 +138,7 @@ namespace RodskaNote
                 DocumentGrid.SelectedObjectTypeName = vm.CurrentDocument.DisplayType;
                 DocumentGrid.SelectedObjectName = vm.CurrentDocument.ToString();
                 CurrentDocumentTitle = vm.CurrentDocument.Title;
+                Console.WriteLine(MainRibbon.ToolBarItems.Count);
                 DocumentGrid.PropertyDefinitions = new PropertyDefinitionCollection
                 {
                     new PropertyDefinition()
@@ -200,6 +210,12 @@ namespace RodskaNote
             e.CanExecute = true;
         }
 
+        private void CompileCurrentDoc(object sender, EventArgs e)
+        {
+            CurrentDocument.Compile();
+        }
+
+
 
 
         private void OpenNewDocument(object sender, ExecutedRoutedEventArgs e)
@@ -230,6 +246,28 @@ namespace RodskaNote
                     }
                 }   
             }
+        }
+
+        private void CompileNewDoc(object sender, ExecutedRoutedEventArgs e)
+        {
+            CurrentDocument.Compile();
+        }
+
+        private void Float_Click(object sender, RoutedEventArgs e)
+        {
+            LayoutContent item = RodskaRoot.ActiveContent as LayoutContent;
+            item.Float();
+        }
+
+        private void Hide_Click(object sender, RoutedEventArgs e)
+        {
+            LayoutContent item = RodskaRoot.ActiveContent as LayoutContent;
+            LayoutAnchorable anchorable = item as LayoutAnchorable;
+            if (anchorable != null)
+            {
+                anchorable.Hide();
+            }
+            
         }
     }
 }

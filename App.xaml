@@ -9,14 +9,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Fluent;Component/Themes/Generic.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Fluent;component/Themes/Themes/Light.Cobalt.xaml" />
-
+                <ResourceDictionary Source="pack://application:,,,/Fluent;component/Themes/Themes/Light.Red.xaml" />
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Accent and AppTheme setting -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Cobalt.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Cobalt.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Red.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Red.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
 
@@ -24,7 +23,7 @@
             <SolidColorBrush x:Key="RodskaTabBackground" Color="#FF55AA7F"/>
             <SolidColorBrush x:Key="RodskaYellowButton" Color="#FFFFE87E"/>
             <SolidColorBrush x:Key="ImageBrush"  Color="Black" />
-
+            
         </ResourceDictionary>
     </Application.Resources>
     <JumpList.JumpList>

@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace RodskaNote.Controls
 {
-    public class RodskaWindow : MetroWindow, IRibbonWindow, IDataWindow
+    public class RodskaWindow :  RibbonWindow, IDataWindow
     {
         private readonly WindowLogic _logic;
 
@@ -39,16 +39,10 @@ namespace RodskaNote.Controls
 
             // Call manually the first time (for injected view models)
             OnViewModelChanged();
-            this.Loaded += RodskaWindow_Loaded;
             
         }
 
-        private void RodskaWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.TitleBar = this.FindChild<RibbonTitleBar>("RibbonTitleBar");
-            this.TitleBar.InvalidateArrange();
-            this.TitleBar.UpdateLayout();
-        }
+        
         public IViewModel ViewModel
         {
             get { return _logic.ViewModel; }
@@ -90,18 +84,5 @@ namespace RodskaNote.Controls
             return Task.CompletedTask;
         }
 
-        public RibbonTitleBar TitleBar
-        {
-            get { return (RibbonTitleBar)this.GetValue(TitleBarProperty); }
-            private set { this.SetValue(TitleBarPropertyKey, value); }
-        }
-
-        // ReSharper disable once InconsistentNaming
-        private static readonly DependencyPropertyKey TitleBarPropertyKey = DependencyProperty.RegisterReadOnly(nameof(TitleBar), typeof(RibbonTitleBar), typeof(RodskaWindow), new PropertyMetadata());
-
-        /// <summary>
-        /// <see cref="DependencyProperty"/> for <see cref="TitleBar"/>.
-        /// </summary>
-        public static readonly DependencyProperty TitleBarProperty = TitleBarPropertyKey.DependencyProperty;
     }
 }

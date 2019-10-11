@@ -1,7 +1,6 @@
 ﻿<localControls:RodskaWindow
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
-         x:Class="RodskaNote.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,93 +10,84 @@
         xmlns:localControls="clr-namespace:RodskaNote.Controls"
         xmlns:rodska_attrs="clr-namespace:RodskaNote.Attributes"
     xmlns:rodskaConverters="clr-namespace:RodskaNote.Converters"
-    ShowTitleBar="True"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:nodelist="clr-namespace:NodeNetwork.Toolkit.NodeList;assembly=NodeNetworkToolkit"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:vs2013="clr-namespace:AvalonDock.Themes.VS2013;assembly=AvalonDock.Themes.VS2013"
+         x:Class="RodskaNote.MainWindow"
     mc:Ignorable="d"
-    GlowBrush="{DynamicResource AccentColorBrush}"
+
     x:Name="entryWindow"
-        Title="RodskaNote" Height="450" Width="800" ShowIconOnTitleBar="True">
-    <Metro:MetroWindow.Resources>
-        <ResourceDictionary>
-            <Style x:Key="{x:Type fluent:BackstageTabControl}"
-                   TargetType="{x:Type fluent:BackstageTabControl}"
-                   BasedOn="{StaticResource {x:Type fluent:BackstageTabControl}}">
-                <Setter Property="SelectedContentMargin"
-                        Value="0" />
-            </Style>
-        </ResourceDictionary>
-    </Metro:MetroWindow.Resources>
+        Title="RodskaNote" Height="450" Width="800" Icon="favicon.ico" SnapsToDevicePixels="True" >
 
-    <Metro:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <fluent:RibbonTitleBar x:Name="RibbonTitleBar"                                   
-                                   Header="{Binding Path=Title, RelativeSource={RelativeSource AncestorType=Window}}"/>
-        </DataTemplate>
-    </Metro:MetroWindow.TitleTemplate>
-
-    <Metro:MetroWindow.RightWindowCommands>
-        <Metro:WindowCommands>
-            <Button Content="settings" />
-        </Metro:WindowCommands>
-    </Metro:MetroWindow.RightWindowCommands>
-    <Metro:MetroWindow.CommandBindings>
+    <localControls:RodskaWindow.CommandBindings>
         <CommandBinding Command="ApplicationCommands.SaveAs"
                   Executed="SaveCurrentDocument"
                   CanExecute="CanSaveCurrentDocument"/>
         <CommandBinding Command="ApplicationCommands.Open"
                   Executed="OpenNewDocument"
                   CanExecute="CanOpenNewDocument"/>
-    </Metro:MetroWindow.CommandBindings>
+    </localControls:RodskaWindow.CommandBindings>
+    <localControls:RodskaWindow.TaskbarItemInfo>
+        <TaskbarItemInfo>
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo Description="Compile" x:Name="CompileTaskBtn" Click="CompileCurrentDoc" ImageSource="{Binding CompileIcon, ConverterParameter={StaticResource ImageBrush}, Converter={fa:ImageSourceConverter}, ElementName=entryWindow}"/>
+
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </localControls:RodskaWindow.TaskbarItemInfo>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="35*"/>
-            <ColumnDefinition Width="97*"/>
+            <ColumnDefinition Width="210*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="509*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="73*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <fluent:ApplicationMenu Grid.ColumnSpan="2">
+        <fluent:ApplicationMenu Grid.ColumnSpan="5">
             <fluent:ApplicationMenu.RightPaneContent>
                 <StackPanel>
-                    <TextBlock Text="RodskaNote" FontSize="30">
-
-                    </TextBlock>
+                    <TextBlock Text="RodskaNote" FontSize="30"/>
 
                 </StackPanel>
             </fluent:ApplicationMenu.RightPaneContent>
         </fluent:ApplicationMenu>
-        <fluent:Ribbon Grid.Row="0" Grid.ColumnSpan="2"
-                       CanCustomizeQuickAccessToolBar="True"
-                       CanCustomizeQuickAccessToolBarItems="True">
-            
+        <fluent:Ribbon Grid.Row="0" Grid.ColumnSpan="5"
+                       CanCustomizeQuickAccessToolBarItems="True"
+                       x:Name="MainRibbon"
+                       AutomaticStateManagement="True" Height="121"
+                       >
+
             <fluent:Ribbon.QuickAccessItems>
                 <fluent:QuickAccessMenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
             </fluent:Ribbon.QuickAccessItems>
-            
+
             <fluent:Ribbon.Menu>
-                <fluent:Backstage UseHighestAvailableAdornerLayer="False">
+
+                <fluent:Backstage UseHighestAvailableAdornerLayer="False" AreAnimationsEnabled="True" Header="File">
                     <fluent:BackstageTabControl x:Name="CreateIntBackstage">
-                        <fluent:Button Header="Save As..." Name="saveAsBtn" Command="ApplicationCommands.SaveAs"></fluent:Button>
-                        <fluent:BackstageTabItem Header="Load..."></fluent:BackstageTabItem>
-                        <fluent:Button Header="Open..." Name="loadDocBtn" Command="ApplicationCommands.Open"></fluent:Button>
+                        <fluent:Button Header="Save As..." x:Name="saveAsBtn" Command="ApplicationCommands.SaveAs"/>
+                        <fluent:BackstageTabItem Header="Load..."/>
+                        <fluent:Button Header="Open..." x:Name="loadDocBtn" Command="ApplicationCommands.Open"/>
                         <fluent:BackstageTabItem Header="Create..."  >
                             <fluent:BackstageTabItem.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <TextBlock Text="Create New Document" FontSize="24pt"  FontFamily="Segoe UI Light">
-
-                                        </TextBlock>
+                                        <TextBlock Text="Create New Document" FontSize="24pt"  FontFamily="Segoe UI Light"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </fluent:BackstageTabItem.ContentTemplate>
                         </fluent:BackstageTabItem>
-                        <fluent:Button x:Name="newProject" Header="New Project"></fluent:Button>
-                        <fluent:BackstageTabItem Header="Save..."></fluent:BackstageTabItem>
+                        <fluent:Button x:Name="newProject" Header="New Project"/>
+                        <fluent:BackstageTabItem Header="Save..."/>
 
                     </fluent:BackstageTabControl>
 
@@ -107,57 +97,64 @@
 
             <fluent:RibbonTabItem Header="Home">
                 <fluent:RibbonGroupBox Header="Clipboard" Width="100" >
-                    <fluent:Button Header="Paste" CanAddToQuickAccessToolBar="True" SizeDefinition="Large, Middle, Middle" LargeIcon="{Binding ElementName=entryWindow, Path=PasteIcon}" Icon="{Binding ElementName=entryWindow, Path=PasteIcon}"  Command="{Binding PasteCommand, ElementName=entryWindow}">
-
-                    </fluent:Button>
-                    <fluent:Button Header="Cut" CanAddToQuickAccessToolBar="True" SizeDefinition="Middle, Middle, Small" LargeIcon="{Binding ElementName=entryWindow, Path=CutIcon}" Icon="{Binding ElementName=entryWindow, Path=CutIcon}"  Command="{Binding CutCommand, ElementName=entryWindow}">
-
-                    </fluent:Button>
-                    <fluent:Button Header="Copy" CanAddToQuickAccessToolBar="True" SizeDefinition="Middle, Middle, Small" LargeIcon="{Binding ElementName=entryWindow, Path=CopyIcon}" Icon="{Binding ElementName=entryWindow, Path=CopyIcon}"  Command="{Binding CopyCommand, ElementName=entryWindow}">
-
-                    </fluent:Button>
+                    <fluent:Button Header="Paste" CanAddToQuickAccessToolBar="True" SizeDefinition="Large, Middle, Middle" LargeIcon="{Binding PasteIcon, ElementName=entryWindow}" Icon="{Binding PasteIcon, ElementName=entryWindow}"  Command="{Binding PasteCommand, ElementName=entryWindow}"/>
+                    <fluent:Button Header="Cut" CanAddToQuickAccessToolBar="True" SizeDefinition="Middle, Middle, Small" LargeIcon="{Binding CutIcon, ElementName=entryWindow}" Icon="{Binding CutIcon, ElementName=entryWindow}"  Command="{Binding CutCommand, ElementName=entryWindow}"/>
+                    <fluent:Button Header="Copy" CanAddToQuickAccessToolBar="True" SizeDefinition="Middle, Middle, Small" LargeIcon="{Binding CopyIcon, ElementName=entryWindow}" Icon="{Binding CopyIcon, ElementName=entryWindow}"  Command="{Binding CopyCommand, ElementName=entryWindow}"/>
                 </fluent:RibbonGroupBox>
             </fluent:RibbonTabItem>
             <fluent:RibbonTabItem Header="Insert">
-                <fluent:RibbonGroupBox Header="Interactions" x:Name="CreateInteractions" Width="Auto"  ItemsSource="{Binding Source={x:Static local:App.Current}, Path=InteractionModels}" MinWidth="200">
+                <fluent:RibbonGroupBox Header="Interactions" x:Name="CreateInteractions" Width="Auto"  ItemsSource="{Binding InteractionModels, Source={x:Static Application.Current}}" MinWidth="200">
                     <fluent:RibbonGroupBox.ItemTemplate >
                         <DataTemplate DataType="{x:Type rodska_attrs:CreativeDocumentRepresentation}" >
-                            <fluent:Button SizeDefinition="Middle, Small, Small" Header="{Binding Path=Title}" Command="{Binding CreateDocument}" LargeIcon="{Binding Path=Icon, Converter={fa:ImageSourceConverter}, ConverterParameter={StaticResource ImageBrush}}" Icon="{Binding Path=FontAwesomeIcon, Converter={fa:ImageSourceConverter}, ConverterParameter={StaticResource ImageBrush}}">
+                            <fluent:Button SizeDefinition="Middle, Middle, Small" Header="{Binding Title}" Command="{Binding CreateDocument}" LargeIcon="{Binding Icon, ConverterParameter={StaticResource ImageBrush}, Converter={fa:ImageSourceConverter}}" Icon="{Binding Icon, ConverterParameter={StaticResource ImageBrush}, Converter={fa:ImageSourceConverter}}">
                                 <fluent:Button.ToolTip>
-                                    <fluent:ScreenTip Title="{Binding Path=Title}" Text="{Binding Path=Description}"/>
+                                    <fluent:ScreenTip Title="{Binding Title}" Text="{Binding Description}"/>
                                 </fluent:Button.ToolTip>
                             </fluent:Button>
                         </DataTemplate>
                     </fluent:RibbonGroupBox.ItemTemplate>
                 </fluent:RibbonGroupBox>
             </fluent:RibbonTabItem>
+            <fluent:RibbonTabItem Header="View">
+                <fluent:RibbonGroupBox/>
+            </fluent:RibbonTabItem>
         </fluent:Ribbon>
-        <xcad:DockingManager Grid.Row="1" AllowMixedOrientation="True" Grid.ColumnSpan="2" >
-            <xcad:DockingManager.Theme>
-                <xcad:MetroTheme></xcad:MetroTheme>
-            </xcad:DockingManager.Theme>
-            <xcad:DockingManager.DocumentContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Save Document" Command="ApplicationCommands.Save"></MenuItem>
-                    <MenuItem Header="Save Document As..." Command="ApplicationCommands.SaveAs"></MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Header="Close Document" Command="ApplicationCommands.Close"></MenuItem>
+        <xcad:DockingManager Grid.Row="1" AllowMixedOrientation="True"  x:Name="MainLayout" Grid.ColumnSpan="5"   >
+                
 
-                </ContextMenu>
+            <xcad:DockingManager.Theme>
+                <vs2013:Vs2013LightTheme/>
+            </xcad:DockingManager.Theme>
+            <xcad:DockingManager.AnchorableContextMenu>
+                <fluent:ContextMenu>
+                    <fluent:MenuItem Header="Float" Click="Float_Click" Command="{Binding ElementName=entryWindow, Path=FloatCommand}" />
+                    <Separator/>
+                    <fluent:MenuItem Header="Hide" Click="Hide_Click"/>
+                </fluent:ContextMenu>
+            </xcad:DockingManager.AnchorableContextMenu>
+            <xcad:DockingManager.DocumentContextMenu>
+                <fluent:ContextMenu>
+                    <fluent:MenuItem Header="Save Document" Command="ApplicationCommands.Save"/>
+                    <fluent:MenuItem Header="Save Document As..." Command="ApplicationCommands.SaveAs"/>
+                    <Separator/>
+                    <fluent:MenuItem Header="Close Document" Command="ApplicationCommands.Close"/>
+
+                </fluent:ContextMenu>
             </xcad:DockingManager.DocumentContextMenu>
-            <xcad:DockingManager.DocumentHeaderTemplate>
+            <xcad:DockingManager.DocumentHeaderTemplate >
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                        <Image Source="{Binding ElementName=RodskaRoot, Path=LastFocusedDocument.IconSource}"></Image>
-                        <TextBlock Text="{Binding ElementName=RodskaRoot, Path=LastFocusedDocument.Title}"></TextBlock>
+                        <Image Source="{Binding LastFocusedDocument.IconSource, ElementName=RodskaRoot}"/>
+                        <TextBlock Text="{Binding LastFocusedDocument.Title, ElementName=RodskaRoot}"/>
                     </StackPanel>
                 </DataTemplate>
             </xcad:DockingManager.DocumentHeaderTemplate>
             <xcad:LayoutRoot x:Name="RodskaRoot">
                 <xcad:LayoutPanel Orientation="Horizontal">
                     <xcad:LayoutAnchorablePane DockWidth="200">
+                        
                         <xcad:LayoutAnchorable ContentId="properties" Title="Properties" CanHide="False" CanClose="False"
-                                                                                                                           AutoHideWidth="240">
+                                                                                                                    AutoHideWidth="240">
                             <xctk:PropertyGrid  x:Name="DocumentGrid"  
                                                 NameColumnWidth="50" 
                                                 AutoGenerateProperties="False"
@@ -165,17 +162,14 @@
                                                 PropertyValueChanged="DocumentGrid_PropertyValueChanged"
                                                 />
                         </xcad:LayoutAnchorable>
-                        <xcad:LayoutAnchorable Title="Outline" ContentId="outline">
-                            <TreeView x:Name="documentTree" >
-
-                            </TreeView>
+                        <xcad:LayoutAnchorable Title="Toolbox" ContentId="outline">
+                            <TreeView x:Name="documentTree" />
                         </xcad:LayoutAnchorable>
                     </xcad:LayoutAnchorablePane>
                     <xcad:LayoutDocumentPaneGroup CanRepositionItems="True">
-                        <xcad:LayoutDocumentPane >
-                            <xcad:LayoutDocument x:Name="currentWorldDocument"  >
+                        <xcad:LayoutDocumentPane  CanRepositionItems="True">
+                            <xcad:LayoutDocument x:Name="currentWorldDocument"  />
 
-                            </xcad:LayoutDocument>
                         </xcad:LayoutDocumentPane>
                     </xcad:LayoutDocumentPaneGroup>
                     <xcad:LayoutAnchorablePaneGroup DockWidth="150">
@@ -190,19 +184,19 @@
 
         </xcad:DockingManager>
 
-        <fluent:StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="2">
-            <fluent:StatusBarItem Title="RodskaNote Version" HorizontalAlignment="Left" IsEnabled="True" Value="{Binding Source={x:Static local:App.Current}, Path=Version}">
-                <TextBlock Text="{Binding Source={x:Static local:App.Current}, Path=Version}"/>
+        <fluent:StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
+            <fluent:StatusBarItem Title="RodskaNote Version" HorizontalAlignment="Left" IsEnabled="True" Value="{Binding Version, Source={x:Static Application.Current}}">
+                <TextBlock Text="{Binding Version, Source={x:Static Application.Current}}"/>
             </fluent:StatusBarItem>
 
 
-            <Separator HorizontalAlignment="Left"></Separator>
+            <Separator HorizontalAlignment="Left"/>
 
 
             <fluent:StatusBarItem HorizontalAlignment="Right" Title="Zoom" MinWidth="250" ToolTip="Document Zoom">
                 <StackPanel Orientation="Horizontal">
-                    <Slider Minimum="0.5" Maximum="2.0" Name="zoomSL" IsDirectionReversed="False" MinWidth="150"  IsSnapToTickEnabled="True" TickFrequency="0.1" LargeChange="0.1" Cursor="Arrow" TickPlacement="BottomRight" Foreground="White"/>
-                    <TextBlock Text="{Binding ElementName=zoomSL, Path=Value, Converter={rodskaConverters:SliderPercentage}, UpdateSourceTrigger=PropertyChanged}"  MinWidth="50" Margin="12.5,0,0,0"></TextBlock>
+                    <Slider Minimum="0.5" Maximum="2.0" x:Name="zoomSL" IsDirectionReversed="False" MinWidth="150"  IsSnapToTickEnabled="True" TickFrequency="0.1" LargeChange="0.1" Cursor="Arrow" TickPlacement="BottomRight" Foreground="White" Metro:SliderHelper.TrackValueFillBrush="#CCFFE83C" Metro:SliderHelper.TrackValueFillHoverBrush="#CCFFE83C" Metro:SliderHelper.TrackValueFillPressedBrush="#CCFFE83C" />
+                    <TextBlock Text="{Binding Value, Converter={rodskaConverters:SliderPercentage}, ElementName=zoomSL, UpdateSourceTrigger=PropertyChanged}"  MinWidth="50" Margin="12.5,0,0,0"/>
                 </StackPanel>
             </fluent:StatusBarItem>
         </fluent:StatusBar>
