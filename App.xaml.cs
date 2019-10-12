@@ -22,37 +22,40 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Annotations;
 
-namespace RodskaNote
+namespace RodskaNote.App
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class RodskaApp : RodskaApplication
     {
-        public string Version { get; set; } = "Version 0.1";
-        public ObservableCollection<CreativeDocumentRepresentation> InteractionModels { get; set; } = new ObservableCollection<CreativeDocumentRepresentation>();
-        public IServiceLocator serviceLocator;
-        public IUIVisualizerService uiVisualizerService;
-        private IViewModelLocator viewModelLocator;
-        public MasterViewModel currentMainVM;
-        public List<Type> nodeTypes = new List<Type>();
-        public App()
+        private RodskaLoader loader;
+        public RodskaApp(): base()
         {
-            serviceLocator = ServiceLocator.Default;
             serviceLocator.RegisterType<IWorldDocumentService, DialogueService>();
-
+           
         }
 
 
-     
+         public List<Type> GetLoadedDocumentTypes()
+        {
+            List<Type> types = new List<Type>();
+            foreach (WorldDocument d in loader.WorldDocuments)
+            {
+                types.Add(d.GetType());
+            }
+            return types;
+        }
         public void LoadDependencies()
         {
-            foreach(Type type in CreativeDocumentModel.GetDocumentTypes<WorldDocument>())
+            List<Type> types = GetLoadedDocumentTypes();
+            foreach(Type type in types)
             {
-                _ = type.GetMethod("InitializeDocumentType", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Invoke(null, new object[] { uiVisualizerService, viewModelLocator });
+                _ = type.GetMethod("InitializeDocumentType", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
+                        .Invoke(null, new object[] { uiVisualizerService, viewModelLocator });
             }
             InteractionModels = new ObservableCollection<CreativeDocumentRepresentation>();
-            ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes();
+            ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes(types);
             foreach (CreativeDocumentRepresentation rep in _InteractionModels)
             {
                 InteractionModels.Add(rep);
@@ -67,9 +70,17 @@ namespace RodskaNote
             viewModelLocator.Register<MainWindow, MasterViewModel>();
 
             uiVisualizerService.Register(typeof(MasterViewModel), typeof(MainWindow), true);
+            loader = new RodskaLoader();
+            loader.Load();
             LoadDependencies();
 
         }
 
+        private void Rodska_Exit(object sender, ExitEventArgs e)
+        {
+            loader.Unload();
+        }
+
+       
     }
 }

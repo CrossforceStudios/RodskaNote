@@ -14,9 +14,9 @@ namespace RodskaNote.Providers
     public static class CreationProvider
     {
 
-        public static ObservableCollection<CreativeDocumentRepresentation> InstallDocumentTypes()
+        public static ObservableCollection<CreativeDocumentRepresentation> InstallDocumentTypes(List<Type>? types)
         {
-            ObservableCollection<CreativeDocumentModel> initial = new ObservableCollection<CreativeDocumentModel>(CreativeDocumentModel.GetDocumentControlInfo());
+            ObservableCollection<CreativeDocumentModel> initial = new ObservableCollection<CreativeDocumentModel>(CreativeDocumentModel.GetDocumentControlInfo(types));
             ObservableCollection<CreativeDocumentRepresentation> final = new ObservableCollection<CreativeDocumentRepresentation>();
             foreach(CreativeDocumentModel documentModel in initial)
             {
@@ -25,9 +25,9 @@ namespace RodskaNote.Providers
             return final;
         }
 
-        public static ObservableCollection<CreativeDocumentRepresentation> InstallDocumentTypes(DocumentUsage filter)
+        public static ObservableCollection<CreativeDocumentRepresentation> InstallDocumentTypes(DocumentUsage filter, List<Type>? types)
         {
-            ObservableCollection<CreativeDocumentModel> initial = new ObservableCollection<CreativeDocumentModel>(CreativeDocumentModel.GetDocumentControlInfo());
+            ObservableCollection<CreativeDocumentModel> initial = new ObservableCollection<CreativeDocumentModel>(CreativeDocumentModel.GetDocumentControlInfo(types));
             ObservableCollection<CreativeDocumentRepresentation> final = new ObservableCollection<CreativeDocumentRepresentation>();
             foreach (CreativeDocumentModel documentModel in initial)
             {

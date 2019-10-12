@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using NodeNetwork.Toolkit.Layout.ForceDirected;
+using RodskaNote.App.Models;
 using RodskaNote.Models;
 using RodskaNote.ViewModels;
 using System;
@@ -20,7 +21,7 @@ using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace RodskaNote.Controls.Document
+namespace RodskaNote.App.Controls.Document
 {
     /// <summary>
     /// Interaction logic for InteractionControl.xaml
@@ -34,14 +35,11 @@ namespace RodskaNote.Controls.Document
             Uri uri = new Uri("Syntaxes/Lua.xshd", UriKind.Relative);
             InitializeComponent();
             StreamResourceInfo info = Application.GetResourceStream(uri);
-            using (XmlTextReader reader = new XmlTextReader(info.Stream))
-            {
-                XSHD = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-                HighlightingManager.Instance.RegisterHighlighting("Lua", new string[] { ".lua" }, XSHD);
-                serverEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
-                compilationLua.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
-
-            }
+            using XmlTextReader reader = new XmlTextReader(info.Stream);
+            XSHD = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            HighlightingManager.Instance.RegisterHighlighting("Lua", new string[] { ".lua" }, XSHD);
+            serverEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
+            compilationLua.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
         }
 
         private WorldDocument worldDocument;
@@ -57,7 +55,7 @@ namespace RodskaNote.Controls.Document
 
         private void Compiler_Click(object sender, RoutedEventArgs e)
         {
-            App app = (App)App.Current;
+            RodskaApplication app = (RodskaApplication)RodskaApp.Current;
             MainWindow window = (MainWindow)app.MainWindow;
             InteractionLiteral doc = window.CurrentDocument as InteractionLiteral;
             doc.Compile();

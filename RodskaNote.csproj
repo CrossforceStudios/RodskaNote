@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3ED8EC06-017C-4F17-996D-92D16524BC1F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>RodskaNote</RootNamespace>
+    <RootNamespace>RodskaNote.App</RootNamespace>
     <AssemblyName>RodskaNote</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -76,7 +76,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>RodskaNote.App</StartupObject>
+    <StartupObject>RodskaNote.App.RodskaApp</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -137,6 +137,9 @@
     <Reference Include="ReactiveUI.WPF, Version=10.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ReactiveUI.WPF.10.3.6\lib\net461\ReactiveUI.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="RodskaNote.SDK">
+      <HintPath>..\RodskaNote.SDK\bin\Debug\RodskaNote.SDK.dll</HintPath>
+    </Reference>
     <Reference Include="Splat, Version=9.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Splat.9.1.1\lib\net461\Splat.dll</HintPath>
     </Reference>
@@ -153,6 +156,7 @@
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.ComponentModel.Annotations.4.6.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -266,22 +270,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Attributes\PropertiesEnabled.cs" />
-    <Compile Include="Compilation\DialogueBuilder.cs" />
     <Compile Include="Controls\Document\DialogueControl.xaml.cs">
       <DependentUpon>DialogueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Document\InteractionControl.xaml.cs">
       <DependentUpon>InteractionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Editor\FloatValueEditorView.xaml.cs">
-      <DependentUpon>FloatValueEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Editor\IntegerValueEditorView.xaml.cs">
-      <DependentUpon>IntegerValueEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Editor\StringValueEditorView.xaml.cs">
-      <DependentUpon>StringValueEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Nodes\DialogueNode.cs" />
     <Compile Include="Controls\Nodes\DialoguePromptNode.cs" />
@@ -290,29 +283,13 @@
       <DependentUpon>DialogueResponseNodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Nodes\InteractionNode.cs" />
-    <Compile Include="Controls\Nodes\Primitives\FloatNode.cs" />
-    <Compile Include="Controls\Nodes\Primitives\IntegerNode.cs" />
     <Compile Include="Controls\Nodes\DialoguePromptNodeView.xaml.cs" />
-    <Compile Include="Controls\Nodes\Primitives\PrimitiveNode.cs" />
-    <Compile Include="Controls\Nodes\Primitives\PrimitiveNodeView.xaml.cs">
-      <DependentUpon>PrimitiveNodeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nodes\Primitives\StringNode.cs" />
-    <Compile Include="Controls\Nodes\WorldDocumentNode.cs" />
-    <Compile Include="Controls\RibbonCustomizer.xaml.cs">
-      <DependentUpon>RibbonCustomizer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Ribbon\RibbonCommandBox.xaml.cs">
-      <DependentUpon>RibbonCommandBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\RodskaWindow.cs">
       <Generator>MSBuild:Compile</Generator>
     </Compile>
-    <Compile Include="Controls\Whiteboard.xaml.cs">
-      <DependentUpon>Whiteboard.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\InteractionLiteral.cs" />
-    <Compile Include="ViewModels\EditorTypes\FloatValueEditorViewModel.cs" />
+    <Compile Include="Providers\RodskaLoader.cs" />
     <Compile Include="ViewModels\InteractionViewModel.cs" />
     <Compile Include="Views\InteractionView.xaml.cs">
       <DependentUpon>InteractionView.xaml</DependentUpon>
@@ -327,12 +304,7 @@
     <Compile Include="QATWindow.xaml.cs">
       <DependentUpon>QATWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\SliderPercentageConverter.cs" />
-    <Compile Include="ViewModels\EditorTypes\IntegerValueEditorViewModel.cs" />
-    <Compile Include="ViewModels\EditorTypes\StringValueEditorViewModel.cs" />
     <Compile Include="ViewModels\MainEditorViewModel.cs" />
-    <Compile Include="ViewModels\MasterViewModel.cs" />
-    <Compile Include="Whiteboard\WhiteboardMode.cs" />
     <Page Include="Controls\Document\DialogueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -341,39 +313,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Editor\FloatValueEditorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Editor\IntegerValueEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Editor\StringValueEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Nodes\DialoguePromptNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Nodes\DialogueResponseNodeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Nodes\Primitives\PrimitiveNodeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\RibbonCustomizer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Ribbon\RibbonCommandBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Whiteboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -393,14 +337,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Attributes\CreativeDocumentModel.cs" />
-    <Compile Include="Attributes\CreativeDocumentRepresentation.cs" />
     <Compile Include="Models\Dialogue.cs" />
     <Compile Include="Models\Dialogues.cs" />
-    <Compile Include="Models\WorldDocument.cs" />
     <Compile Include="Providers\CreationProvider.cs" />
     <Compile Include="Services\DialogueService.cs" />
-    <Compile Include="Services\Interfaces\IWorldDocumentService.cs" />
     <Compile Include="ViewModels\DialogueViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -459,5 +399,6 @@
   <ItemGroup>
     <SplashScreen Include="RodskaNodeIcon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

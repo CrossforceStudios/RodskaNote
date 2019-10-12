@@ -3,12 +3,14 @@ using Catel.MVVM;
 using Catel.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RodskaNote.Models
 {
+    [Export(typeof(WorldDocument))]
     public abstract class DialogueLeaf : WorldDocument
     {
        public string Name

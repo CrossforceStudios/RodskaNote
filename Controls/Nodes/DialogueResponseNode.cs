@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using NodeNetwork.Toolkit.ValueNode;
 using ReactiveUI;
+using RodskaNote.App;
 using RodskaNote.Models;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace RodskaNote.Controls.Nodes
                     ActionLua = ActionLua.Value,
                     ConditionLua = ConditionLua.Value,
                 });
-                App app = (App)App.Current;
+                RodskaApp app = (RodskaApp)RodskaApp.Current;
                 MainWindow window = (MainWindow)app.MainWindow;
                 window.SignalDocumentChanged(InputDocument);
             });

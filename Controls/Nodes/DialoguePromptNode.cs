@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using NodeNetwork.Toolkit.ValueNode;
 using ReactiveUI;
+using RodskaNote.App;
 using RodskaNote.Models;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ namespace RodskaNote.Controls.Nodes
                     ConditionLua = ConditionLua.Value,
                 };
                 FinalPrompt.Value =  Observable.Return(InputDocument as DialoguePrompt);
-                App app = (App)App.Current;
+                RodskaApp app = (RodskaApp)RodskaApp.Current;
                 MainWindow window = (MainWindow)app.MainWindow;
                 window.SignalDocumentChanged(FinalPrompt.Value.Wait());
              }); 

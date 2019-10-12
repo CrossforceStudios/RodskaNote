@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RodskaNote.Controls
+namespace RodskaNote.App.Controls
 {
     public class RodskaWindow :  RibbonWindow, IDataWindow
     {

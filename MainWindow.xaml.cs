@@ -8,6 +8,7 @@ using FontAwesome.WPF;
 using Microsoft.Win32;
 using NodeNetwork.Toolkit.NodeList;
 using ReactiveUI;
+using RodskaNote.App;
 using RodskaNote.Attributes;
 using RodskaNote.Models;
 using RodskaNote.Providers;
@@ -37,12 +38,12 @@ using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 
-namespace RodskaNote
+namespace RodskaNote.App
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : RodskaNote.Controls.RodskaWindow, IViewFor<MainEditorViewModel>
+    public partial class MainWindow : RodskaNote.App.Controls.RodskaWindow, IViewFor<MainEditorViewModel>
     {
 #pragma warning disable IDE0052 // Remove unread private members
         private MasterViewModel vm;
@@ -72,7 +73,7 @@ namespace RodskaNote
         public string Version
         {
             get {
-                App app = (App)App.Current;
+                RodskaApp app = (RodskaApp)RodskaApp.Current;
                 return app.Version;
            }
         }
@@ -81,13 +82,13 @@ namespace RodskaNote
             vm = (MasterViewModel)new MasterViewModel(Dispatcher.CurrentDispatcher);
             InitializeComponent();
             CurrentDocumentTitle = "RodskaNote";
-            App app = (App)App.Current;
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
             this.ViewModel = new MainEditorViewModel();
             documentIcons = new Dictionary<Type, FontAwesomeIcon>();
             PasteIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Paste, Brushes.Black);
             CutIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Cut, Brushes.Black);
             CopyIcon = ImageAwesome.CreateImageSource(FontAwesomeIcon.Copy, Brushes.Black);
-            foreach (Type t in CreativeDocumentModel.GetDocumentTypes<WorldDocument>())
+            foreach (Type t in app.GetLoadedDocumentTypes())
             {
                 MethodInfo method = t.GetMethod("PopulateEditor", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                 if (method != null) {
@@ -221,10 +222,12 @@ namespace RodskaNote
         private void OpenNewDocument(object sender, ExecutedRoutedEventArgs e)
         {
             List<Type> t = CreativeDocumentModel.GetDocumentTypes<WorldDocument>();
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Rodska Note Documents (.rndml)|*.rndml";
-            dlg.DefaultExt = ".rndml";
-            dlg.Title = "Open RodskaNote Document...";
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                Filter = "Rodska Note Documents (.rndml)|*.rndml",
+                DefaultExt = ".rndml",
+                Title = "Open RodskaNote Document..."
+            };
             bool? result = dlg.ShowDialog();
             if (result == true)
             {
@@ -240,11 +243,11 @@ namespace RodskaNote
                         if ((string)method.Invoke(null,null) == doc.Type)
                         {
                             CurrentDocument = doc;
-                            stream.Close();
                             break;
                         }
                     }
-                }   
+                }
+                stream.Close();
             }
         }
 
@@ -262,9 +265,9 @@ namespace RodskaNote
         private void Hide_Click(object sender, RoutedEventArgs e)
         {
             LayoutContent item = RodskaRoot.ActiveContent as LayoutContent;
-            LayoutAnchorable anchorable = item as LayoutAnchorable;
-            if (anchorable != null)
+            if (item is LayoutAnchorable)
             {
+                LayoutAnchorable anchorable = item as LayoutAnchorable;
                 anchorable.Hide();
             }
             

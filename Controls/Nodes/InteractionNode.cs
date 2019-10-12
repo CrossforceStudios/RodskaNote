@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using NodeNetwork.Toolkit.ValueNode;
 using ReactiveUI;
+using RodskaNote.App.Models;
 using RodskaNote.Models;
 using System;
 using System.Collections.Generic;

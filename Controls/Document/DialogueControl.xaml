@@ -1,7 +1,7 @@
 ﻿<catel:UserControl
     xmlns:catel="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
-    xmlns:local="clr-namespace:RodskaNote.Controls"
-    x:Class="RodskaNote.Controls.Document.DialogueControl"
+    xmlns:local="clr-namespace:RodskaNote.App.Controls.Document"
+    x:Class="RodskaNote.App.Controls.Document.DialogueControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

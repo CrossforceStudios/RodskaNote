@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +13,15 @@ using DynamicData;
 using NodeNetwork.Views;
 using ReactiveUI;
 using RodskaNote.Attributes;
-using RodskaNote.Controls.Document;
+using RodskaNote.App.Controls.Document;
 using RodskaNote.Controls.Nodes;
 using RodskaNote.ViewModels;
 using RodskaNote.Views;
 using Xceed.Wpf.AvalonDock.Layout;
+using RodskaNote.App;
+using RodskaNote.Models;
 
-namespace RodskaNote.Models
+namespace RodskaNote.App.Models
 {
     public enum InteractionContext
     {
@@ -32,7 +35,7 @@ namespace RodskaNote.Models
         Hold,
         None
     }
-
+    [Export(typeof(WorldDocument))]
     [CreativeDocumentModel("InteractionLiteral","Interaction","Creates a keybind (gamepad and keyboard compatible) interaction that can be used to do tasks such as opening vehicle doors.",DocumentUsage.Interaction,Icon = FontAwesome.WPF.FontAwesomeIcon.Gamepad)]
    public class InteractionLiteral : WorldDocument
     {
@@ -162,7 +165,7 @@ namespace RodskaNote.Models
                     {
                         Console.WriteLine("[RodskaNote]: New Interaction - " + interaction_new.Title);
                         Interactions.Add(interaction_new);
-                        App app = (App)App.Current;
+                        RodskaApp app = (RodskaApp)RodskaApp.Current;
                         MainWindow window = (MainWindow)app.MainWindow;
                         window.CurrentDocument = interaction_new;
                     }
@@ -174,7 +177,7 @@ namespace RodskaNote.Models
                     {
                         Console.WriteLine("[RodskaNote]: New Interaction - " + interaction_new.Title);
                         Interactions.Add(interaction_new);
-                        App app = (App)App.Current;
+                        RodskaApplication app = (RodskaApplication)RodskaApplication.Current;
                         MainWindow window = (MainWindow)app.MainWindow;
                         window.CurrentDocument = interaction_new;
                     }
@@ -207,9 +210,9 @@ namespace RodskaNote.Models
         {
            // NodeListViewModel listViewModel = details["Invoker"]["Nodes"] as NodeListViewModel;
         }
-        public static new void CreateEditor(LayoutDocument document)
+        public static void CreateEditor(LayoutDocument document)
         {
-            App app = (App)App.Current;
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
             document.Content = null;
             ITypeFactory typeFactory = app.currentMainVM.GetTypeFactory();
             MainWindow mainWindow = (MainWindow)app.MainWindow;

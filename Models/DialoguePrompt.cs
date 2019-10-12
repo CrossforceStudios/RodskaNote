@@ -5,16 +5,19 @@ using Catel.Services;
 using NodeNetwork.Toolkit.NodeList;
 using NodeNetwork.Views;
 using ReactiveUI;
+using RodskaNote.App;
 using RodskaNote.Controls.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RodskaNote.Models
 {
+    [Export(typeof(WorldDocument))]
     public class DialoguePrompt: DialogueLeaf
     {
         public ObservableCollection<DialoguePrompt> ChainedPrompts
@@ -48,7 +51,7 @@ namespace RodskaNote.Models
 
         public static new void PopulateEditor(Dictionary<string, Dictionary<string, object>> details)
         {
-            App app = (App)App.Current;
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
             MainWindow window = (MainWindow)app.MainWindow;
             window.ViewModel.ListViewModel.AddNodeType<DialoguePromptNode>(() => new DialoguePromptNode());
 

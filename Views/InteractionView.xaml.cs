@@ -1,5 +1,6 @@
 ﻿using Catel.MVVM;
 using FontAwesome.WPF;
+using RodskaNote.App.Models;
 using RodskaNote.Models;
 using RodskaNote.ViewModels;
 using System;

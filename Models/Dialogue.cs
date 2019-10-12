@@ -8,7 +8,7 @@ using NodeNetwork.Toolkit.NodeList;
 using NodeNetwork.Views;
 using ReactiveUI;
 using RodskaNote.Attributes;
-using RodskaNote.Controls.Document;
+using RodskaNote.App.Controls.Document;
 using RodskaNote.Controls.Nodes;
 using RodskaNote.Models;
 using RodskaNote.ViewModels;
@@ -32,12 +32,15 @@ using Catel.Runtime.Serialization;
 using NodeNetwork.Toolkit.Layout.ForceDirected;
 using System.Windows.Shell;
 using RodskaNote.Views;
+using System.ComponentModel.Composition;
+using RodskaNote.App;
 
 namespace RodskaNote
 {
     /// <summary>
     /// <see cref="WorldDocument"/> used for storing conversation interactions between a player and an NPC.
     /// </summary>
+    [Export(typeof(WorldDocument))]
     [CreativeDocumentModel("Dialogue", "Conversation", "Used to make interactions between the player and an NPC.", DocumentUsage.Interaction, Icon =FontAwesome.WPF.FontAwesomeIcon.Comment)]
     public class Dialogue : WorldDocument
     {
@@ -106,17 +109,19 @@ namespace RodskaNote
         {
 
             XmlSerializer seri = new XmlSerializer(new SerializationManager(), new DataContractSerializerFactory(), new XmlNamespaceManager(), factory, new ObjectAdapter());
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Rodska Note Documents (.rndml)|*.rndml";
-            dlg.FileName = "Dialogue";
-            dlg.DefaultExt = ".rndml";
+            SaveFileDialog dlg = new SaveFileDialog
+            {
+                Filter = "Rodska Note Documents (.rndml)|*.rndml",
+                FileName = "Dialogue",
+                DefaultExt = ".rndml"
+            };
             bool? result  = dlg.ShowDialog();
             if(result == true)
             {
                 FileStream stream = new FileStream(dlg.FileName,FileMode.Create);
                 seri.Serialize(this, stream);
                 stream.Close();
-                JumpList jl = JumpList.GetJumpList(App.Current);
+                JumpList jl = JumpList.GetJumpList(RodskaApplication.Current);
                 bool jpExisting = false;
                 foreach(JumpItem item in jl.JumpItems)
                 {
@@ -132,9 +137,11 @@ namespace RodskaNote
                 }
                 if(!jpExisting)
                 {
-                    JumpPath jp = new JumpPath();
-                    jp.Path = dlg.FileName;
-                    jp.CustomCategory = Type;
+                    JumpPath jp = new JumpPath
+                    {
+                        Path = dlg.FileName,
+                        CustomCategory = Type
+                    };
                     jl.JumpItems.Add(jp);
                     JumpList.AddToRecentCategory(jp);
                     jl.Apply();
@@ -157,7 +164,7 @@ namespace RodskaNote
                       {
                           Console.WriteLine("[RodskaNote]: New Dialogue - " + dialogue_new.Title);
                           Dialogues.Add(dialogue_new);
-                          App app = (App)App.Current;
+                          RodskaApp app = (RodskaApp)RodskaApp.Current;
                           MainWindow window = (MainWindow)app.MainWindow;
                           window.CurrentDocument = dialogue_new;
                       }
@@ -169,7 +176,7 @@ namespace RodskaNote
                       {
                           Console.WriteLine("[RodskaNote]: New Dialogue - " + dialogue_new.Title);
                           Dialogues.Add(dialogue_new);
-                          App app = (App)App.Current;
+                          RodskaApplication app = (RodskaApplication)RodskaApplication.Current;
                           MainWindow window = (MainWindow)app.MainWindow;
                           window.CurrentDocument = dialogue_new;
                       }
@@ -378,11 +385,11 @@ namespace RodskaNote
 
         public static new void PopulateEditor(Dictionary<string,Dictionary<string,object>> details)
         {
-            NodeListViewModel listViewModel =  details["Invoker"]["Nodes"] as NodeListViewModel;
+            
         }
-        public static new void CreateEditor(LayoutDocument document)
+        public static void CreateEditor(LayoutDocument document)
         {
-            App app = (App)App.Current;
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
             document.Content = null;
             ITypeFactory typeFactory = app.currentMainVM.GetTypeFactory();
             MainWindow mainWindow = (MainWindow)app.MainWindow;

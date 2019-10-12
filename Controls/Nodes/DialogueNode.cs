@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using NodeNetwork.Toolkit.ValueNode;
 using ReactiveUI;
+using RodskaNote.App;
 using RodskaNote.Models;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace RodskaNote.Controls.Nodes
                 InputDocument = dialogue;
                 Output.Value = Observable.Return(dialogue);
             });
-            App app = (App)App.Current;
+            RodskaApp app = (RodskaApp) RodskaApp.Current;
             MainWindow window = (MainWindow)app.MainWindow;
             window.DocumentChanged += Window_DocumentChanged;
             CanBeRemovedByUser = false;

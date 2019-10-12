@@ -21,7 +21,7 @@ using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace RodskaNote.Controls.Document
+namespace RodskaNote.App.Controls.Document
 {
     /// <summary>
     /// Interaction logic for DialogueControl.xaml
@@ -35,14 +35,11 @@ namespace RodskaNote.Controls.Document
             InitializeComponent();
             Uri uri = new Uri("Syntaxes/Lua.xshd", UriKind.Relative);
             StreamResourceInfo info = Application.GetResourceStream(uri);
-            using (XmlTextReader reader = new XmlTextReader(info.Stream))
-            {
-                XSHD = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-                HighlightingManager.Instance.RegisterHighlighting("Lua", new string[] { ".lua" }, XSHD);
-                compilationLua.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
+            using XmlTextReader reader = new XmlTextReader(info.Stream);
+            XSHD = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            HighlightingManager.Instance.RegisterHighlighting("Lua", new string[] { ".lua" }, XSHD);
+            compilationLua.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
 
-            }
-            
         }
 
         public NetworkView ConversationWorkspace
@@ -62,7 +59,7 @@ namespace RodskaNote.Controls.Document
 
         private void Compiler_Click(object sender, RoutedEventArgs e)
         {
-            App app = (App)App.Current;
+            RodskaApplication app = (RodskaApplication)RodskaApp.Current;
             MainWindow window = (MainWindow)app.MainWindow;
             Dialogue doc = window.CurrentDocument as Dialogue;
             doc.Compile();
