@@ -10,7 +10,8 @@
         mc:Ignorable="d"
      xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="New Interaction Wizard" Height="450" Width="800" x:Name="wizardView">
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    Title="New Interaction Wizard" Height="450" Width="800" x:Name="wizardView">
     <catel:Window.Resources>
         <ObjectDataProvider x:Key="InteractionContextEnum" MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
@@ -23,13 +24,11 @@
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="rodskaModels:ActionType"/>
             </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>        
+        </ObjectDataProvider>
     </catel:Window.Resources>
-        <xctk:Wizard   FinishButtonClosesWindow="True" CurrentPage="{Binding ElementName=Context}" Cancel="Wizard_Cancel">
-        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="IntroPage" Title="Welcome to the Interaction Creator!" Description="This wizard will guide you in the creation of your very own keybound interaction.">
-
-        </xctk:WizardPage>
-        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="TitlePage" Title="Interaction Title" Description="First, you must give your interaction a name/title.">
+    <syncfusion:WizardControl Cancel="Wizard_Cancel" CancelButtonCancelsWindow="True" FinishButtonClosesWindow="True">
+        <syncfusion:WizardPage x:Name="IntroPage" Title="Welcome to the Interaction Creator!" Description="This wizard will guide you in the creation of your very own keybound interaction. Press Next to continue."></syncfusion:WizardPage>
+        <syncfusion:WizardPage x:Name="TitlePage" Title="Interaction Title" Description="First, you must give your interaction a name/title.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -43,8 +42,8 @@
                 <Label Grid.Row="0" Grid.Column="1" Content="Interaction Title" Margin="0,0,10,0"></Label>
                 <TextBox x:Name="InteractionTitleBox" Grid.Row="1" Grid.Column="1" AutomationProperties.HelpText="The title of the interaction." Margin="0,0,0,-24" Text="{Binding Title}" FontSize="20" TextChanged="InteractionTitleBox_TextChanged" ></TextBox>
             </Grid>
-        </xctk:WizardPage>
-        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Context" Title="Context Properties" Description="Next (if you want), set the context properties.">
+        </syncfusion:WizardPage>
+        <syncfusion:WizardPage x:Name="Context" Title="Context Properties" Description="Next (if you want), set the context properties.">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -68,17 +67,9 @@
 
                 </ComboBox>
             </Grid>
-        </xctk:WizardPage>
-        <xctk:WizardPage ExteriorPanelBackground="{StaticResource RodskaYellowButton}" x:Name="Finished" CanFinish="True" Title="Finish Interaction Creation" Description="Congatulations! You have finished creating your interaction. To continue editing, click Finish.">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-            </Grid>
-        </xctk:WizardPage>
-    </xctk:Wizard>
+        </syncfusion:WizardPage>
+        <syncfusion:WizardPage x:Name="Finished" Title="Finished" Description="Congratulations! You have finished creating your interaction. To continue editing, click Finish.">
+        
+        </syncfusion:WizardPage>
+    </syncfusion:WizardControl>
 </catel:Window>

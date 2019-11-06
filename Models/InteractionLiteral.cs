@@ -17,9 +17,14 @@ using RodskaNote.App.Controls.Document;
 using RodskaNote.Controls.Nodes;
 using RodskaNote.ViewModels;
 using RodskaNote.Views;
-using Xceed.Wpf.AvalonDock.Layout;
 using RodskaNote.App;
 using RodskaNote.Models;
+using System.Windows.Controls;
+using System.ComponentModel;
+using FontAwesome5;
+using System.IO;
+using Catel.Runtime.Serialization;
+using Catel.Runtime.Serialization.Xml;
 
 namespace RodskaNote.App.Models
 {
@@ -36,73 +41,135 @@ namespace RodskaNote.App.Models
         None
     }
     [Export(typeof(WorldDocument))]
-    [CreativeDocumentModel("InteractionLiteral","Interaction","Creates a keybind (gamepad and keyboard compatible) interaction that can be used to do tasks such as opening vehicle doors.",DocumentUsage.Interaction,Icon = FontAwesome.WPF.FontAwesomeIcon.Gamepad)]
+    [CreativeDocumentModel("InteractionLiteral","Interaction","Creates a keybind (gamepad and keyboard compatible) interaction that can be used to do tasks such as opening vehicle doors.",DocumentUsage.Interaction,Icon = EFontAwesomeIcon.Solid_Gamepad)]
    public class InteractionLiteral : WorldDocument
     {
-        [PropertiesEnabled("Interaction Context", "The type of interaction.", "Contexts", 1)]
+        [Category("Contexts")]
+        [DisplayName("Interaction Context")]
+        [Description("The type of interaction.")]
         public InteractionContext Context
         {
             get { return GetValue<InteractionContext>(ContextProperty); }
-            set { SetValue(ContextProperty, value); }
+            set {
+                InteractionContext _oldValue = GetValue<InteractionContext>(ContextProperty);
+                InteractionContext _newValue = value;
+                TrackSet(ContextProperty, _oldValue, _newValue);
+            }
 
         }
 
+        [PropertiesDisabled]
+        public new string DisplayType { get; set; } = "Keybind Interaction";
+
+        [PropertiesDisabled]
+        public new string Type
+        {
+            get { return GetValue<string>(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
+        }
+
+        [PropertiesDisabled]
+        public new bool IsCanceled
+        {
+            get;
+            set;
+        }
+
+        [PropertiesDisabled]
+        public new string CompilationResult { get; set; }
+
         public static readonly PropertyData ContextProperty = RegisterProperty("Context", typeof(InteractionContext), () => InteractionContext.None);
-      
-        [PropertiesEnabled("Action Type","Whether the interaction is activated via press or hold","Input",1)]
+        [Category("Contexts")]
+        [DisplayName("Action Type")]
+        [Description("Is the interaction activated via press or hold?")]
         public ActionType InputContext
         {
             get { return GetValue<ActionType>(ActionTypeProperty); }
-            set { SetValue(ActionTypeProperty, value); }
+            set {
+
+                ActionType _oldValue = GetValue<ActionType>(ActionTypeProperty);
+                ActionType _newValue = value;
+                TrackSet(ActionTypeProperty, _oldValue, _newValue);
+            }
         }
+        [PropertiesDisabled]
 
         public string ActionBuilderLua
         {
             get { return GetValue<string>(ActionBuilderLuaProperty); }
-            set { SetValue(ActionBuilderLuaProperty, value);  }
+            set {
+                string _oldValue = GetValue<string>(ActionBuilderLuaProperty);
+                string _newValue = value;
+                TrackSet(ActionBuilderLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ActionBuilderLuaProperty = RegisterProperty("ActionBuilderLua", typeof(string), null);
+        [PropertiesDisabled]
 
         public string CreationConditionLua
         {
             get { return GetValue<string>(CreationConditionLuaProperty); }
-            set { SetValue(CreationConditionLuaProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(CreationConditionLuaProperty);
+                string _newValue = value;
+                TrackSet(CreationConditionLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData CreationConditionLuaProperty = RegisterProperty("CreationConditionLua", typeof(string), null);
+        [PropertiesDisabled]
 
         public string ClientIntLua
         {
             get { return GetValue<string>(ClientIntLuaProperty); }
-            set { SetValue(ClientIntLuaProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(ClientIntLuaProperty);
+                string _newValue = value;
+                TrackSet(ClientIntLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ClientIntLuaProperty = RegisterProperty("ClientIntLua", typeof(string), null);
+        [PropertiesDisabled]
 
         public string LocationLua
         {
             get { return GetValue<string>(LocationLuaProperty); }
-            set { SetValue(LocationLuaProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(LocationLuaProperty);
+                string _newValue = value;
+                TrackSet(LocationLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData LocationLuaProperty = RegisterProperty("LocationLua", typeof(string), null);
+        [PropertiesDisabled]
 
         public float ActivationDistance
         {
             get { return GetValue<float>(ActivationDistanceProperty); }
-            set { SetValue(ActivationDistanceProperty, value); }
+            set {
+                float _oldValue = GetValue<float>(ActivationDistanceProperty);
+                float _newValue = value;
+                TrackSet(ActivationDistanceProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ActivationDistanceProperty = RegisterProperty("ActivationDistance", typeof(float), null);
 
 
-        public static readonly PropertyData ActionTypeProperty = RegisterProperty("ActionTypeContext", typeof(ActionType), () => ActionType.None);
+        public static readonly PropertyData ActionTypeProperty = RegisterProperty("InputContext", typeof(ActionType), () => ActionType.None);
+        [PropertiesDisabled]
 
         public string Description
         {
             get { return GetValue<string>(DescriptionProperty); }
-            set { SetValue(DescriptionProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(DescriptionProperty);
+                string _newValue = value;
+                TrackSet(DescriptionProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData DescriptionProperty = RegisterProperty("Description", typeof(string), null);
@@ -146,7 +213,8 @@ namespace RodskaNote.App.Models
 
             uiVisualizerService.Register(typeof(InteractionViewModel), typeof(InteractionView), true);
             Splat.Locator.CurrentMutable.Register(() => new NodeView(), typeof(IViewFor<InteractionNode>));
-
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
+            app.AddType(GetTypeString(), typeof(InteractionLiteral));
         }
 
 
@@ -196,9 +264,13 @@ namespace RodskaNote.App.Models
         public InteractionLiteral()
         {
             Type = "InteractionLiteral";
-            DisplayType  = "Keybind Interaction";
         }
 
+        public static InteractionLiteral LoadFromFile(XmlSerializer seri, FileStream stream)
+        {
+            stream.Position = 0;
+            return seri.Deserialize<InteractionLiteral>(stream);
+        }
 
 
         public static new string GetTypeString()
@@ -210,7 +282,7 @@ namespace RodskaNote.App.Models
         {
            // NodeListViewModel listViewModel = details["Invoker"]["Nodes"] as NodeListViewModel;
         }
-        public static void CreateEditor(LayoutDocument document)
+        public static new void CreateEditor(ContentControl document)
         {
             RodskaApp app = (RodskaApp)RodskaApp.Current;
             document.Content = null;
@@ -228,8 +300,7 @@ namespace RodskaNote.App.Models
             InteractionNode node = new InteractionNode(interaction);
 
             control.interactionWorkspace.ViewModel.Nodes.Add(node);
-            // node.Name = interaction.Title;
-            // interactionView.conversationWorkspace.ViewModel.Nodes.Add(node);
+            node.Name = interaction.Title;
 
             control.CurrentDocument = interaction;
             document.Content = control;
@@ -238,5 +309,10 @@ namespace RodskaNote.App.Models
 
         }
 
+
+        public static new InteractionLiteral Convert(object obj)
+        {
+            return (InteractionLiteral)obj;
+        }
     }
 }

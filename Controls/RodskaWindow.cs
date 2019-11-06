@@ -2,8 +2,7 @@
 using Catel.MVVM.Providers;
 using Catel.MVVM.Views;
 using Catel.Windows;
-using Fluent;
-using MahApps.Metro.Controls;
+using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;

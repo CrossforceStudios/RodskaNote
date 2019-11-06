@@ -2,7 +2,6 @@
 using Catel.MVVM;
 using Catel.MVVM.Views;
 using Catel.Services;
-using Fluent;
 using NodeNetwork.ViewModels;
 using RodskaNote.Attributes;
 using RodskaNote.Models;
@@ -30,10 +29,10 @@ namespace RodskaNote.App
     public partial class RodskaApp : RodskaApplication
     {
         private RodskaLoader loader;
-        public RodskaApp(): base()
+        public RodskaApp() : base()
         {
             serviceLocator.RegisterType<IWorldDocumentService, DialogueService>();
-           
+
         }
 
 
@@ -46,6 +45,9 @@ namespace RodskaNote.App
             }
             return types;
         }
+
+        
+        
         public void LoadDependencies()
         {
             List<Type> types = GetLoadedDocumentTypes();
@@ -54,11 +56,30 @@ namespace RodskaNote.App
                 _ = type.GetMethod("InitializeDocumentType", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
                         .Invoke(null, new object[] { uiVisualizerService, viewModelLocator });
             }
+            List<TreeEntry> treeEntries = loader.TreeEntries;
+            foreach(TreeEntry entry in treeEntries)
+            {
+                TreeEntryTypes.Add(entry.GetType());
+            }
             InteractionModels = new ObservableCollection<CreativeDocumentRepresentation>();
-            ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes(types);
+            UtilityModels = new ObservableCollection<CreativeDocumentRepresentation>();
+            ProgressionModels = new ObservableCollection<CreativeDocumentRepresentation>();
+
+            ObservableCollection<CreativeDocumentRepresentation> _InteractionModels = CreationProvider.InstallDocumentTypes(DocumentUsage.Interaction, types);
+            ObservableCollection<CreativeDocumentRepresentation> _UtilityModels = CreationProvider.InstallDocumentTypes(DocumentUsage.Utility, types);
+            ObservableCollection<CreativeDocumentRepresentation> _ProgressionModels = CreationProvider.InstallDocumentTypes(DocumentUsage.Progression, types);
+
             foreach (CreativeDocumentRepresentation rep in _InteractionModels)
             {
                 InteractionModels.Add(rep);
+            }
+            foreach (CreativeDocumentRepresentation rep in _UtilityModels)
+            {
+                UtilityModels.Add(rep);
+            }
+            foreach (CreativeDocumentRepresentation rep in _ProgressionModels)
+            {
+                ProgressionModels.Add(rep);
             }
         }
         private void Rodska_Startup(object sender, StartupEventArgs e)

@@ -23,7 +23,11 @@ namespace RodskaNote.Models
         public ObservableCollection<DialoguePrompt> Prompts
         {
             get { return GetValue<ObservableCollection<DialoguePrompt>>(PromptsProperty); }
-            set { SetValue(PromptsProperty, value); }
+            set { SetValue(PromptsProperty, value);
+                ObservableCollection<DialoguePrompt> _oldValue = GetValue<ObservableCollection<DialoguePrompt>>(PromptsProperty);
+                ObservableCollection<DialoguePrompt> _newValue = value;
+                TrackSet(PromptsProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData PromptsProperty = RegisterProperty("Prompts", typeof(ObservableCollection<DialoguePrompt>), () => new ObservableCollection<DialoguePrompt>());
@@ -31,7 +35,11 @@ namespace RodskaNote.Models
         public int Order
         {
             get { return GetValue<int>(OrderProperty); }
-            set { SetValue(OrderProperty, value); }
+            set {
+                int _oldValue = GetValue<int>(OrderProperty);
+                int _newValue = value;
+                TrackSet(OrderProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData OrderProperty = RegisterProperty("Order", typeof(int), () => 0);
@@ -70,6 +78,16 @@ namespace RodskaNote.Models
                 }
             }
             return new DialogueResponse();
+        }
+
+        public static new DialogueResponse Convert(object obj)
+        {
+            return (DialogueResponse)obj;
+        }
+
+        public static new string GetTypeString()
+        {
+            return "Dialogue Response";
         }
     }
 

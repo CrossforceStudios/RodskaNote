@@ -23,7 +23,11 @@ namespace RodskaNote.Models
         public ObservableCollection<DialoguePrompt> ChainedPrompts
         {
             get { return GetValue < ObservableCollection<DialoguePrompt>>(ChainedPromptsProperty); }
-            set { SetValue(ChainedPromptsProperty, value);  }
+            set {
+                ObservableCollection<DialoguePrompt> _oldValue = GetValue<ObservableCollection<DialoguePrompt>>(ChainedPromptsProperty);
+                ObservableCollection<DialoguePrompt> _newValue = value;
+                TrackSet(ChainedPromptsProperty, _oldValue, _newValue);
+            }
         }
 
         public override void SaveDocumentAs(ITypeFactory factory)
@@ -36,7 +40,11 @@ namespace RodskaNote.Models
         public ObservableCollection<DialogueResponse> Responses
         {
             get { return GetValue<ObservableCollection<DialogueResponse>>(ResponsesProperty); }
-            set { SetValue(ResponsesProperty, value); }
+            set {
+                ObservableCollection<DialogueResponse> _oldValue = GetValue<ObservableCollection<DialogueResponse>>(ResponsesProperty);
+                ObservableCollection<DialogueResponse> _newValue = value;
+                TrackSet(ResponsesProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ResponsesProperty = RegisterProperty("Responses", typeof(ObservableCollection<DialogueResponse>), () => new ObservableCollection<DialogueResponse>());
@@ -44,7 +52,11 @@ namespace RodskaNote.Models
         public int Priority
         {
             get { return GetValue<int>(PriorityProperty); }
-            set { SetValue(PriorityProperty, value); }
+            set {
+                int _oldValue = GetValue<int>(PriorityProperty);
+                int _newValue = value;
+                TrackSet(PriorityProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData PriorityProperty = RegisterProperty("Priority", typeof(int), () => 0);
@@ -67,6 +79,17 @@ namespace RodskaNote.Models
         public override void Compile()
         {
             
+        }
+
+        public static new string GetTypeString()
+        {
+            return "Dialogue Prompt";
+        }
+
+
+        public static new DialoguePrompt Convert(object obj)
+        {
+            return (DialoguePrompt)obj;
         }
 
         public static DialoguePrompt GetLeafWithName(string name, ICollection<DialoguePrompt> leaves)

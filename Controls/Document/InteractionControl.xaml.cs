@@ -32,13 +32,12 @@ namespace RodskaNote.App.Controls.Document
 
         public InteractionControl(InteractionViewModel viewModel): base()
         {
-            Uri uri = new Uri("Syntaxes/Lua.xshd", UriKind.Relative);
             InitializeComponent();
+             Uri uri = new Uri("Syntaxes/Lua.xshd", UriKind.Relative);
             StreamResourceInfo info = Application.GetResourceStream(uri);
             using XmlTextReader reader = new XmlTextReader(info.Stream);
             XSHD = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             HighlightingManager.Instance.RegisterHighlighting("Lua", new string[] { ".lua" }, XSHD);
-            serverEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
             compilationLua.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".lua");
         }
 

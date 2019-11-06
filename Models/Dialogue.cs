@@ -24,7 +24,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using System.Windows.Threading;
-using Xceed.Wpf.AvalonDock.Layout;
 using NodeNetwork.ViewModels;
 using RodskaNote.Controls.Nodes.Primitives;
 using Catel.Runtime.Serialization.Xml;
@@ -34,6 +33,9 @@ using System.Windows.Shell;
 using RodskaNote.Views;
 using System.ComponentModel.Composition;
 using RodskaNote.App;
+using System.Windows.Controls;
+using System.ComponentModel;
+using FontAwesome5;
 
 namespace RodskaNote
 {
@@ -41,19 +43,47 @@ namespace RodskaNote
     /// <see cref="WorldDocument"/> used for storing conversation interactions between a player and an NPC.
     /// </summary>
     [Export(typeof(WorldDocument))]
-    [CreativeDocumentModel("Dialogue", "Conversation", "Used to make interactions between the player and an NPC.", DocumentUsage.Interaction, Icon =FontAwesome.WPF.FontAwesomeIcon.Comment)]
+    [CreativeDocumentModel("Dialogue", "Conversation", "Used to make interactions between the player and an NPC.", DocumentUsage.Interaction, Icon = EFontAwesomeIcon.Solid_Comment)]
     public class Dialogue : WorldDocument
     {
         /// <summary>
         /// A float representing the distance at which the conversation can be held.
         /// </summary>
-        [PropertiesEnabled("Conversation Distance", "The distance at which the dialogue can be held.", "Metrics", 1)]
-
+        [Category("Metrics")]
+        [DisplayName("Conversation Distance")]
+        [Description("The distance at which a conversation can be held.")]
         public float ConversationDistance
         {
-            get => GetValue<float>(ConversationDistanceProperty);
-            set => SetValue(ConversationDistanceProperty, value);
+            get { return GetValue<float>(ConversationDistanceProperty); }
+            set
+            {
+                float _oldValue = GetValue<float>(ConversationDistanceProperty);
+                float _newValue = value;
+                TrackSet<float>(ConversationDistanceProperty, _oldValue, _newValue);
+            }
         }
+
+        [PropertiesDisabled]
+
+        public new string DisplayType { get; set; } = "Conversation";
+
+        [PropertiesDisabled]
+        public new string Type
+        {
+            get { return GetValue<string>(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
+
+        }
+
+        [PropertiesDisabled]
+        public new bool IsCanceled
+        {
+            get;
+            set;
+        }
+
+        [PropertiesDisabled]
+        public new string CompilationResult { get; set; }
 
         public static readonly PropertyData ConversationDistanceProperty = RegisterProperty("ConversationDistance", typeof(float), () => 25);
 
@@ -62,35 +92,57 @@ namespace RodskaNote
         /// <summary>
         /// A float representing the distance at which a conversation can be started automatically.
         /// </summary>
-        [PropertiesEnabled("Trigger Distance", "The distance at which the dialogue can be started.", "Metrics", 2)]
+        [Category("Metrics")]
+        [DisplayName("Trigger Distance")]
+        [Description("The distance at which a conversation can be activated.")]
         public float TriggerDistance
         {
             get { return GetValue<float>(TriggerDistanceProperty); }
-            set { SetValue(TriggerDistanceProperty, value); }
+            set {
+                float _oldValue = GetValue<float>(TriggerDistanceProperty);
+                float _newValue = value;
+                TrackSet<float>(TriggerDistanceProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData TriggerDistanceProperty = RegisterProperty("TriggerDistance", typeof(float), () => 0);
 
+        [PropertiesDisabled]
         public ObservableCollection<DialoguePrompt> Prompts
         {
             get { return GetValue<ObservableCollection<DialoguePrompt>>(PromptsProperty);  }
-            set { SetValue(PromptsProperty, value); }
+            set {
+                ObservableCollection<DialoguePrompt> _oldValue = GetValue<ObservableCollection<DialoguePrompt>>(PromptsProperty);
+                ObservableCollection<DialoguePrompt> _newValue = value;
+                TrackSet(PromptsProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData PromptsProperty = RegisterProperty("Prompts", typeof(ObservableCollection<DialoguePrompt>), () => new ObservableCollection<DialoguePrompt>());
 
+        [PropertiesDisabled]
+
         public ObservableCollection<DialoguePrompt> InitialPrompts
         {
             get { return GetValue<ObservableCollection<DialoguePrompt>>(InitialPromptsProperty); }
-            set { SetValue(InitialPromptsProperty, value); }
+            set {
+                ObservableCollection<DialoguePrompt> _oldValue = GetValue<ObservableCollection<DialoguePrompt>>(InitialPromptsProperty);
+                ObservableCollection<DialoguePrompt> _newValue = value;
+                TrackSet(InitialPromptsProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData InitialPromptsProperty = RegisterProperty("InitialPrompts", typeof(ObservableCollection<DialoguePrompt>), () => new ObservableCollection<DialoguePrompt>());
+        [PropertiesDisabled]
 
         public ObservableCollection<DialogueResponse> Responses
         {
             get { return GetValue<ObservableCollection<DialogueResponse>>(ResponsesProperty); }
-            set { SetValue(ResponsesProperty, value); }
+            set {
+                ObservableCollection<DialogueResponse> _oldValue = GetValue<ObservableCollection<DialogueResponse>>(ResponsesProperty);
+                ObservableCollection<DialogueResponse> _newValue = value;
+                TrackSet(ResponsesProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ResponsesProperty = RegisterProperty("Responses", typeof(ObservableCollection<DialogueResponse>), () => new ObservableCollection<DialogueResponse>());
@@ -196,7 +248,8 @@ namespace RodskaNote
 
             uiVisualizerService.Register(typeof(DialogueViewModel), typeof(DialogueView), true);
             Splat.Locator.CurrentMutable.Register(() => new NodeView(), typeof(IViewFor<DialogueNode>));
-
+            RodskaApp app = (RodskaApp)RodskaApp.Current;
+            app.AddType(GetTypeString(), typeof(Dialogue));
         }
 
         public override void Compile()
@@ -387,7 +440,7 @@ namespace RodskaNote
         {
             
         }
-        public static void CreateEditor(LayoutDocument document)
+        public static new  void CreateEditor(ContentControl document)
         {
             RodskaApp app = (RodskaApp)RodskaApp.Current;
             document.Content = null;
@@ -573,6 +626,16 @@ namespace RodskaNote
 
         }
 
+        public static new Dialogue Convert(object obj)
+        {
+            return (Dialogue)obj;
+        }
+
+        public static Dialogue LoadFromFile(Catel.Runtime.Serialization.Xml.XmlSerializer seri, FileStream stream)
+        {
+            stream.Position = 0;
+            return seri.Deserialize<Dialogue>(stream);
+        }
         public static new string GetTypeString()
         {
             return "Dialogue";

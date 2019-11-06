@@ -1,5 +1,5 @@
 ﻿using Catel.MVVM;
-using FontAwesome.WPF;
+using FontAwesome5;
 using RodskaNote.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace RodskaNote.Views
     {
         private DialogueViewModel vm;
 
-        public FontAwesomeIcon DialogueIcon { get; set; } = FontAwesomeIcon.Comment;
+        public EFontAwesomeIcon DialogueIcon { get; set; } = EFontAwesomeIcon.Solid_Comment;
         public DialogueView(IViewModel viewModel)
         {
             vm = (DialogueViewModel)viewModel;
@@ -52,6 +52,11 @@ namespace RodskaNote.Views
         private void Wizard_Cancel(object sender, RoutedEventArgs e)
         {
             vm.Dialogue.IsCanceled = true;
+        }
+
+        private void WizardControl_Finish(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

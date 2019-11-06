@@ -18,7 +18,7 @@ namespace RodskaNote.Controls.Nodes
         public ValueNodeInputViewModel<string> SpeechInput { get; set; }
         public ValueListNodeInputViewModel<DialoguePrompt> PromptsInput { get; set; }
 
-        public ValueNodeInputViewModel<int> Order { get; set; }
+        public ValueNodeInputViewModel<long> Order { get; set; }
 
         public ValueNodeInputViewModel<string> ConditionLua { get; set; }
 
@@ -39,7 +39,7 @@ namespace RodskaNote.Controls.Nodes
                 Name = "Prompts"
             };
 
-            Order = new ValueNodeInputViewModel<int>()
+            Order = new ValueNodeInputViewModel<long>()
             {
                 Name = "Response Order"
             };
@@ -76,11 +76,11 @@ namespace RodskaNote.Controls.Nodes
                     Speech = SpeechInput.Value,
                     Title = Title.Value,
                     Prompts = new ObservableCollection<DialoguePrompt>(PromptsInput.Values.Items.ToList()),
-                    Order = Order.Value,
+                    Order = (int)Order.Value,
                     ActionLua = ActionLua.Value,
                     ConditionLua = ConditionLua.Value,
                 });
-                RodskaApp app = (RodskaApp)RodskaApp.Current;
+                RodskaApp app = (RodskaApp)System.Windows.Application.Current;
                 MainWindow window = (MainWindow)app.MainWindow;
                 window.SignalDocumentChanged(InputDocument);
             });

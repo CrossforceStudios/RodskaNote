@@ -22,7 +22,11 @@ namespace RodskaNote.Models
         public string Speech
         {
             get { return GetValue<string>(SpeechProperty); }
-            set { SetValue(SpeechProperty, value);  }
+            set {
+                string _oldValue = GetValue<string>(SpeechProperty);
+                string _newValue = value;
+                TrackSet(SpeechProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData SpeechProperty = RegisterProperty("Speech", typeof(string), () => "Hello World");
@@ -30,7 +34,11 @@ namespace RodskaNote.Models
         public string LeafTitle
         {
             get { return GetValue<string>(LeafTitleProperty); }
-            set { SetValue(LeafTitleProperty, value);  }
+            set {
+                string _oldValue = GetValue<string>(LeafTitleProperty);
+                string _newValue = value;
+                TrackSet(LeafTitleProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData LeafTitleProperty = RegisterProperty("LeafTitle", typeof(string), null);
@@ -38,7 +46,11 @@ namespace RodskaNote.Models
         public string ConditionLua
         {
             get { return GetValue<string>(ConditionLuaProperty);  }
-            set { SetValue(ConditionLuaProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(ConditionLuaProperty);
+                string _newValue = value;
+                TrackSet(ConditionLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ConditionLuaProperty = RegisterProperty("ConditionLua", typeof(string), () => "return true");
@@ -46,7 +58,11 @@ namespace RodskaNote.Models
         public string ActionLua
         {
             get { return GetValue<string>(ActionLuaProperty); }
-            set { SetValue(ActionLuaProperty, value); }
+            set {
+                string _oldValue = GetValue<string>(ActionLuaProperty);
+                string _newValue = value;
+                TrackSet(ActionLuaProperty, _oldValue, _newValue);
+            }
         }
 
         public static readonly PropertyData ActionLuaProperty = RegisterProperty("ActionLua", typeof(string), () => "");
@@ -66,6 +82,16 @@ namespace RodskaNote.Models
                 }
             }
             return null;
+        }
+
+        public static new DialogueLeaf Convert(object obj)
+        {
+            return (DialogueLeaf)obj;
+        }
+
+        public static new string GetTypeString()
+        {
+            return "Dialogue Leaf";
         }
 
 

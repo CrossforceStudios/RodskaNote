@@ -1,4 +1,5 @@
-﻿<UserControl x:Class="RodskaNote.App.Controls.Document.InteractionControl"
+﻿<UserControl
+     x:Class="RodskaNote.App.Controls.Document.InteractionControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,38 +7,24 @@
              xmlns:local="clr-namespace:RodskaNote.App.Controls.Document"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:views="clr-namespace:NodeNetwork.Views;assembly=NodeNetwork"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Metro:MetroAnimatedTabControl  x:Name="interactionEditor">
-        <Metro:MetroTabItem Header="Server Code" Name="ServerCode">
-            <avalonedit:TextEditor x:Name="serverEditor" FontFamily="Consolas" FontSize="20" ShowLineNumbers="True">
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:syncfusionskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             syncfusionskin:SfSkinManager.VisualStyle="Metro">
+    <syncfusion:DockingManager x:Name="interactionEditor" Grid.Row="0" Grid.ColumnSpan="2" UseDocumentContainer="True">
+            <avalonedit:TextEditor syncfusion:DockingManager.Header="Server Code"  x:Name="serverEditor" ShowLineNumbers="True" syncfusion:DockingManager.State="Document"   BorderBrush="Black" BorderThickness="1" Background="White" Foreground="Black" />
+            <views:NetworkView x:Name="interactionWorkspace" syncfusion:DockingManager.Header="Interaction Graph" syncfusion:DockingManager.State="Document"></views:NetworkView>
+            <avalonedit:TextEditor syncfusion:DockingManager.State="Document" ShowLineNumbers="True" x:Name="compilationLua" IsReadOnly="True" BorderBrush="Black" BorderThickness="1" Background="White" Foreground="Black"  Margin="0" syncfusion:DockingManager.Header="Compiled Interaction"/>
+            <syncfusion:DockingManager.TDIToolBarTray>
+                <ToolBarTray>
+                    <ToolBar Name="DocumentControls">
+                        <Button x:Name="Compiler" Content="Compile Document"  Click="Compiler_Click" />
+                        <Button x:Name="LayoutO" Content="Reorganize Document" Click="LayoutO_Click"  />
+                    </ToolBar>
+                </ToolBarTray>
+            </syncfusion:DockingManager.TDIToolBarTray>
 
-            </avalonedit:TextEditor>
-        </Metro:MetroTabItem>
-        <Metro:MetroTabItem Header="Interaction Graph">
-            <views:NetworkView x:Name="interactionWorkspace"></views:NetworkView>
-        </Metro:MetroTabItem>
-        <Metro:MetroTabItem Header="Compiled Interaction">
-            <avalonedit:TextEditor x:Name="compilationLua" IsReadOnly="True" FontFamily="Consolas" FontSize="20" ShowLineNumbers="True">
-
-            </avalonedit:TextEditor>
-        </Metro:MetroTabItem>
-    </Metro:MetroAnimatedTabControl>
-    <ToolBarTray Grid.Row="2">
-        <ToolBar  Name="DocumentControls" Header="Compilation"  Background="{DynamicResource RodskaYellowButton}">
-            <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click" Background="{DynamicResource RodskaYellowButton}"/>
-            <Button x:Name="LayoutO" Content="Reorganize Document" Click="LayoutO_Click" Background="{DynamicResource RodskaYellowButton}"/>
-        </ToolBar>
-        <ToolBar Name="HelpTopics" Header="Help Topics">
-            <Button x:Name="HelpMain" Content="Dialogue (Help)" Background="{DynamicResource RodskaYellowButton}"></Button>
-        </ToolBar>
-    </ToolBarTray>
-    </Grid>
-
+        </syncfusion:DockingManager>
 </UserControl>

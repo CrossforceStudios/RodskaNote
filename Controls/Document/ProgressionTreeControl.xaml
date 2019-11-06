@@ -1,0 +1,80 @@
+﻿<catel:UserControl x:Class="RodskaNote.App.Controls.Document.ProgressionTreeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RodskaNote.App.Controls.Document"
+                   xmlns:commands="clr-namespace:RodskaNote.App.Commands"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:catel="http://schemas.catelproject.com"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <catel:UserControl.CommandBindings>
+        <CommandBinding Command="commands:ProgressTreeCommands.AddRegularItemCommand"
+                        CanExecute="CanAddRegularItem"
+                        Executed="AddRegularItem"
+                        />
+        <CommandBinding Command="commands:ProgressTreeCommands.AddRegularBatchCommand"
+                        CanExecute="CanAddRegularBatch"
+                        Executed="AddRegularBatch"
+                        />
+        <CommandBinding Command="commands:ProgressTreeCommands.AddSpecialBatchCommand"
+                        CanExecute="CanAddSpecialBatch"
+                        Executed="AddSpecialBatchCmd"
+                        />
+    </catel:UserControl.CommandBindings>
+    <StackPanel Orientation="Vertical">
+        <syncfusion:HierarchyNavigator x:Name="navigation" IsEnableHistory="True" IsEnableEditMode="True" ItemsSource="{Binding Progression.RootNodeP.Children}">
+            <syncfusion:HierarchyNavigator.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}"/>
+                        <TextBlock Text=" ("/>
+                        <TextBlock Text="{Binding Level}"/>
+                        <TextBlock Text=")"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </syncfusion:HierarchyNavigator.ItemTemplate>
+        </syncfusion:HierarchyNavigator>
+        <syncfusion:CardView ItemsSource="{Binding ElementName=navigation, Path=SelectedItem.Children}" IsEditing="True" CanEdit="True" Orientation="Horizontal">
+            <syncfusion:CardView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="LEVEL" FontWeight="Bold"></TextBlock>
+                        <TextBlock Text="{Binding Level}"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </syncfusion:CardView.ItemTemplate>
+            <syncfusion:CardView.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold"></TextBlock>
+                </DataTemplate>
+            </syncfusion:CardView.HeaderTemplate>
+            <syncfusion:CardView.EditItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+                        <syncfusion:UpDown Value="{Binding Level}" />
+                    </StackPanel>
+                </DataTemplate>
+            </syncfusion:CardView.EditItemTemplate>
+        </syncfusion:CardView>
+        <syncfusion:ToolBarAdv x:Name="ProgressPalette" EnableAddRemoveButton="True" ToolBarName="Progress Palette">
+            <syncfusion:ButtonAdv Label="Add Regular Item" x:Name="AddRegular" Command="commands:ProgressTreeCommands.AddRegularItemCommand"></syncfusion:ButtonAdv>
+            <syncfusion:ButtonAdv Label="Add Poster Item" x:Name="AddSpecial" syncfusion:ToolBarAdv.Label="Poster Item" syncfusion:ToolBarAdv.IsAvailable="False"></syncfusion:ButtonAdv>
+            <syncfusion:ButtonAdv Label="Add Full Batch" x:Name="AddBatch" IsCheckable="False"  Command="commands:ProgressTreeCommands.AddRegularBatchCommand" syncfusion:ToolBarAdv.Label="Full Batch" syncfusion:ToolBarAdv.IsAvailable="True" ></syncfusion:ButtonAdv>
+            <syncfusion:ButtonAdv Label="Add Reward Item" x:Name="AddReward" IsCheckable="False" syncfusion:ToolBarAdv.Label="Reward Item" syncfusion:ToolBarAdv.IsAvailable="False"></syncfusion:ButtonAdv>
+            <syncfusion:ButtonAdv Label="Add Special Batch" x:Name="AddSpecialBatch" Command="commands:ProgressTreeCommands.AddSpecialBatchCommand" syncfusion:ToolBarAdv.Label="Special Batch" syncfusion:ToolBarAdv.IsAvailable="False"/>
+        </syncfusion:ToolBarAdv>
+    </StackPanel>
+    <!--<syncfusion:TreeViewAdv x:Name="TreeMode" Sorting="Ascending" VisualStyle="Metro"  PathSeparator="-&gt;">
+    
+        <syncfusion:TreeViewAdv.EditedItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Text="{Binding Header}"/>
+                </StackPanel>
+            </DataTemplate>
+        </syncfusion:TreeViewAdv.EditedItemTemplate>
+    </syncfusion:TreeViewAdv>-->
+</catel:UserControl>

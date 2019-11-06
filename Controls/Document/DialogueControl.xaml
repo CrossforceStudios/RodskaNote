@@ -8,58 +8,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:nodenetwork="clr-namespace:NodeNetwork.Views;assembly=NodeNetwork"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-    xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     mc:Ignorable="d" 
     x:Name="entryControl"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Metro:MetroAnimatedTabControl Grid.Row="0">
-            <Metro:MetroTabItem Header="Dialogue Graph">
-             
-                <nodenetwork:NetworkView x:Name="conversationWorkspace">
-                    <nodenetwork:NetworkView.ContextMenu>
-                        <ContextMenu>
-                        </ContextMenu>
-                    </nodenetwork:NetworkView.ContextMenu>
-                    </nodenetwork:NetworkView>
-            </Metro:MetroTabItem>
-            <Metro:MetroTabItem Header="Compiled Dialogue">
+        <syncfusion:DockingManager Grid.Row="0" UseDocumentContainer="True">
 
-                <Metro:MetroAnimatedTabControl>
-                    <Metro:MetroTabItem Header="Lua"  BorderBrush="#CCFFFFFF">
+            <nodenetwork:NetworkView syncfusion:DockingManager.Header="Dialogue Graph" syncfusion:DockingManager.State="Document" x:Name="conversationWorkspace">
 
-                        <avalonedit:TextEditor
+            </nodenetwork:NetworkView>
+            <syncfusion:TabControlExt syncfusion:DockingManager.Header="Compiled Dialogue" syncfusion:DockingManager.State="Document">
+
+                <syncfusion:TabItemExt Header="Lua"  BorderBrush="#CCFFFFFF">
+
+                    <avalonedit:TextEditor
                              x:Name="compilationLua"
                              FontFamily="Consolas"
                              FontSize="18pt"
-                             SyntaxHighlighting="Lua"
                              IsReadOnly="True"
+                            ShowLineNumbers="True"
                             >
-                            
-                        </avalonedit:TextEditor>
-                    </Metro:MetroTabItem>
-                    <Metro:MetroTabItem Header="JSON">
-                        
-                    </Metro:MetroTabItem>
-                    <Metro:MetroTabItem Header="Director Script">
-                       
-                    </Metro:MetroTabItem>
-                </Metro:MetroAnimatedTabControl>
-            </Metro:MetroTabItem>
-        </Metro:MetroAnimatedTabControl>
-        <catel:ToolBarTray Grid.Row="2">
-            <catel:ToolBar  Name="DocumentControls" Header="Compilation"  Background="{DynamicResource RodskaYellowButton}">
-                <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click" Background="{DynamicResource RodskaYellowButton}"/>
-                <Button x:Name="LayoutO" Content="Reorganize Document" Click="LayoutO_Click" Background="{DynamicResource RodskaYellowButton}"/>
-            </catel:ToolBar>
-            <catel:ToolBar Name="HelpTopics" Header="Help Topics">
-                <Button x:Name="HelpMain" Content="Dialogue (Help)" Background="{DynamicResource RodskaYellowButton}"></Button>
-            </catel:ToolBar>
-        </catel:ToolBarTray>
-        
-    </Grid>
+
+                    </avalonedit:TextEditor>
+                </syncfusion:TabItemExt>
+                <syncfusion:TabItemExt Header="JSON">
+
+                </syncfusion:TabItemExt>
+                <syncfusion:TabItemExt Header="Director Script">
+
+                </syncfusion:TabItemExt>
+            </syncfusion:TabControlExt>
+            <syncfusion:DockingManager.TDIToolBarTray>
+                <ToolBarTray>
+                    <ToolBar>
+                        <Button x:Name="Compiler" Content="Compile Document" Click="Compiler_Click"></Button>
+                        <Button x:Name="LayoutO" Content="Reorganize Document" Click="LayoutO_Click"></Button>
+                    </ToolBar>
+                </ToolBarTray>
+            </syncfusion:DockingManager.TDIToolBarTray>
+        </syncfusion:DockingManager>
 </catel:UserControl>

@@ -53,7 +53,8 @@ namespace RodskaNote.App.Controls.Document
         {
             get { return worldDocument;  }
             set {
-                worldDocument = value;          
+                worldDocument = value;
+                
             }
         }
 

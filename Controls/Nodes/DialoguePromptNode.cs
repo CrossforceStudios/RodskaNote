@@ -19,7 +19,7 @@ namespace RodskaNote.Controls.Nodes
         public  ValueNodeInputViewModel<string> SpeechInput { get; set; }
         public  ValueListNodeInputViewModel<DialoguePrompt> ChainedPromptsInput { get; set; }
 
-        public ValueNodeInputViewModel<int> Priority { get; set; }
+        public ValueNodeInputViewModel<long> Priority { get; set; }
 
         public ValueNodeInputViewModel<string> ConditionLua { get; set; }
 
@@ -41,7 +41,7 @@ namespace RodskaNote.Controls.Nodes
                 Name = "Chained Prompts"
             };
 
-            Priority = new ValueNodeInputViewModel<int>()
+            Priority = new ValueNodeInputViewModel<long>()
             {
                 Name = "Prompt Priority"
             };
@@ -84,7 +84,7 @@ namespace RodskaNote.Controls.Nodes
                     Speech = SpeechInput.Value,
                     Title = Title.Value,
                     ChainedPrompts = new ObservableCollection<DialoguePrompt>(ChainedPromptsInput.Values.Items.ToList()),
-                    Priority = Priority.Value,
+                    Priority = (int)Priority.Value,
                     Responses = new ObservableCollection<DialogueResponse>(Responses.Values.Items.ToList()),
                     ActionLua = ActionLua.Value,
                     ConditionLua = ConditionLua.Value,
